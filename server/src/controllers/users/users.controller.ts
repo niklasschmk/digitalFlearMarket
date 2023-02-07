@@ -46,18 +46,30 @@ export class UsersController {
     @Post('/newUser')
     @ApiResponse({type: CreateUserRequestDto})
     createNewUser(@Body() body: CreateUserRequestDto): CreateUserResponseDto {
-        this.userService.createNewUser(body);
-        return new CreateUserResponseDto(true);
+        try {
+            this.userService.createNewUser(body);
+            return new CreateUserResponseDto(true);
+        } catch (err) {
+            throw new BadRequestException('Something went wrong', {cause: err, description: 'Error description'});
+        }
     }
 
     @Put('/updateUser/:userId')
     updateUser(@Param('userId', ParseIntPipe) userId: number, @Body() body: UpdateUserRequestDto): UpdateUserResponseDto{
-        this.userService.updateUser(userId, body);
-        return new UpdateUserResponseDto(true);
+        try {
+            this.userService.updateUser(userId, body);
+            return new UpdateUserResponseDto(true);
+        } catch (err) {
+            throw new BadRequestException('Something went wrong', {cause: err, description: 'Error description'});
+        }
     }
 
     @Delete('/delete/:userId')
     deleteUserById(@Param('userId', ParseIntPipe) userId: string): void {
-        this.userService.remove(userId);
+        try {
+            this.userService.remove(userId);
+        } catch (err) {
+            throw new BadRequestException('Something went wrong', {cause: err, description: 'Error description'});
+        }
     }
 }
