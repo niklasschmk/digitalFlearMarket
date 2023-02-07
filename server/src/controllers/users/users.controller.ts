@@ -17,6 +17,7 @@ import {CreateUserRequestDto} from "../../dtos/users/CreateUserRequestDto";
 import {CreateUserResponseDto} from "../../dtos/users/CreateUserResponseDto";
 import {UpdateUserRequestDto} from "../../dtos/users/UpdateUserRequestDto";
 import {UpdateUserResponseDto} from "../../dtos/users/UpdateUserResponseDto";
+import {MessageResultDto} from "../../dtos/MessageResultDto";
 
 @Controller('users')
 export class UsersController {
@@ -65,7 +66,7 @@ export class UsersController {
     }
 
     @Delete('/delete/:userId')
-    deleteUserById(@Param('userId', ParseIntPipe) userId: string): void {
+    deleteUserById(@Param('userId', ParseIntPipe) userId: number): void {
         try {
             this.userService.remove(userId);
         } catch (err) {

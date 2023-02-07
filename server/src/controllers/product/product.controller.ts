@@ -57,7 +57,7 @@ export class ProductController {
     }
 
     @Delete('/delete/:productId')
-    deleteProduct(@Param('productId', ParseIntPipe) productId: string): void {
+    deleteProduct(@Param('productId', ParseIntPipe) productId: number): void {
         this.productService.remove(productId);
     }
 }

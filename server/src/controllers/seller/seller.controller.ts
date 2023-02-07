@@ -65,7 +65,7 @@ export class SellerController {
     }
 
     @Delete('deleteSeller/:userId')
-    deleteSellerById(@Param('userId', ParseIntPipe) userId: string): void {
+    deleteSellerById(@Param('userId', ParseIntPipe) userId: number): void {
         try {
             this.sellerService.remove(userId);
         } catch (err) {

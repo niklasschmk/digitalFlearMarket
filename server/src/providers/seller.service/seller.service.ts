@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {Seller} from "../../models/seller";
 import {CreateSellerRequestDto} from "../../dtos/sellers/CreateSellerRequestDto";
 import {UpdateSellerRequestDto} from "../../dtos/sellers/UpdateSellerRequestDto";
+import {MessageResultDto} from "../../dtos/MessageResultDto";
 
 @Injectable()
 export class SellerService {
@@ -32,7 +33,14 @@ export class SellerService {
         });
     }
 
-    async remove(userId: string): Promise<void> {
+    async remove(userId: number): Promise<MessageResultDto> {
+        const seller: Seller | null = await this.sellersRepository.findOneBy({
+            userId: userId,
+        });
+        if (seller == null){
+            throw new NotFoundException();
+        }
         await this.sellersRepository.delete(userId);
+        return new MessageResultDto(`Verkäufer ${seller.firstname} ${seller.lastname} wurde gelöscht!`);
     }
 }

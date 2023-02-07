@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {Product} from "../../models/product";
 import {Repository} from "typeorm";
 import {InjectRepository} from "@nestjs/typeorm";
 import {CreateProductRequestDto} from "../../dtos/products/CreateProductRequestDto";
 import {UpdateProductRequestDto} from "../../dtos/products/UpdateProductRequestDto";
+import {MessageResultDto} from "../../dtos/MessageResultDto";
 
 @Injectable()
 export class ProductService {
@@ -33,7 +34,14 @@ export class ProductService {
         });
     }
 
-    async remove(productId: string): Promise<void> {
+    async remove(productId: number): Promise<MessageResultDto> {
+        const product: Product | null = await this.productsRepository.findOneBy({
+            productId: productId,
+        });
+        if (product == null){
+            throw new NotFoundException();
+        }
         await this.productsRepository.delete(productId);
+        return new MessageResultDto(`Produkt ${product.name} wurde gelöscht!`);
     }
 }
