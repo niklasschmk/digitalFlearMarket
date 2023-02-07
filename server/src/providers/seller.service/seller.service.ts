@@ -16,7 +16,7 @@ export class SellerService {
     }
 
     getSellerById(userId: number): Promise<Seller> {
-        return this.sellersRepository.findOneBy({userId});
+        return this.sellersRepository.findOneBy({userId: userId});
     }
 
     async createNewSeller(dto: CreateSellerRequestDto): Promise<Seller> {
