@@ -16,10 +16,14 @@ import {CreateSellerRequestDto} from "../../dtos/sellers/CreateSellerRequestDto"
 import {CreateSellerResponseDto} from "../../dtos/sellers/CreateSellerResponseDto";
 import {UpdateSellerRequestDto} from "../../dtos/sellers/UpdateSellerRequestDto";
 import {UpdateSellerResponseDto} from "../../dtos/sellers/UpdateSellerResponseDto";
+import {CreateFavoriteSellerReqDto} from "../../dtos/favoriteSeller/CreateFavoriteSellerReqDto";
+import {CreateFavoriteSellerResDto} from "../../dtos/favoriteSeller/CreateFavoriteSellerResDto";
+import {FavoriteSellerService} from "../../providers/favorite-seller.service/favorite-seller.service";
 
 @Controller('seller')
 export class SellerController {
-    constructor(private readonly sellerService: SellerService) {
+    constructor(private readonly sellerService: SellerService,
+                private readonly favoriteSellerService: FavoriteSellerService) {
     }
 
     @Get('/sellers')
@@ -40,6 +44,13 @@ export class SellerController {
         } catch (err) {
             throw new NotFoundException('There is no user with this id', {cause: err, description: 'An user with this id was not found.'})
         }
+    }
+
+    @Post('favorSeller')
+    @ApiResponse({type: CreateFavoriteSellerReqDto})
+    favorProduct(@Body() body: CreateFavoriteSellerReqDto): CreateFavoriteSellerResDto {
+        this.favoriteSellerService.favorSeller(body);
+        return new CreateFavoriteSellerResDto(true);
     }
 
     @Post('/newSeller')

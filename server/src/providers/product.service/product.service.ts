@@ -5,6 +5,7 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {CreateProductRequestDto} from "../../dtos/products/CreateProductRequestDto";
 import {UpdateProductRequestDto} from "../../dtos/products/UpdateProductRequestDto";
 import {MessageResultDto} from "../../dtos/MessageResultDto";
+import {FavoriteProducts} from "../../models/favoriteProducts";
 
 @Injectable()
 export class ProductService {
@@ -13,6 +14,12 @@ export class ProductService {
 
     getAllProducts(): Promise<Product[]> {
         return this.productsRepository.find();
+    }
+
+    getProductsOfSeller(userId: number): Promise<Product[]> {
+        return this.productsRepository.findBy({
+            userId: userId,
+        });
     }
 
     getProductById(productId: number): Promise<Product> {
