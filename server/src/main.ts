@@ -4,41 +4,53 @@ import {ValidationPipe} from "@nestjs/common";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import session from "express-session";
 import {Server} from "socket.io";
+import {ChatmessageService} from "./providers/chatmessage.service/chatmessage.service";
+import {SessionService} from "./providers/session.service/session.service";
 
 class InMemorySessionStore{
   sessions: Map<any, any>;
-  constructor() {
+  constructor(private sessionService: SessionService) {
     this.sessions = new Map();
   }
 
   findSession(id) {
-    return this.sessions.get(id);
+    //return this.sessions.get(id);
+    return this.sessionService.findSession(id);
   }
 
   saveSession(id, session) {
-    this.sessions.set(id, session);
+    //this.sessions.set(id, session);
+    this.sessionService.saveSession(id, session);
   }
 
   findAllSessions() {
-    return [...this.sessions.values()];
+    //return [...this.sessions.values()];
+    return this.sessionService.findAllSessions();
   }
 }
 
 class MessageStore{
   messages: any[];
-  constructor() {
+  constructor(private messageService: ChatmessageService) {
     this.messages = [];
   }
 
   saveMessage(message) {
-    this.messages.push(message);
+    //this.messages.push(message);
+    this.messageService.saveMessage(message.content, message.from, message.to);
   }
 
   findMessagesForUser(userID) {
+    /*
     return this.messages.filter(
         ({ from, to }) => from === userID || to === userID
-    );
+    );*/
+    return this.messageService.findMessagesForUser(userID);
   }
+}
+
+function randomId(): Number {
+  return Math.floor(Math.random()*(1000-1+1));
 }
 
 async function bootstrap() {
@@ -138,11 +150,6 @@ async function bootstrap() {
       userId: socket.id,
       firstname: socket.firstname,
       lastname: socket.lastname,
-    });
-
-    socket.on("user connected", (user) => {
-      initReactiveProperties(user);
-      this.users.push(user);
     });
 
     socket.on("send private message", ({content, to}) => {
