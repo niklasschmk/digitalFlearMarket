@@ -6,6 +6,16 @@ import {User} from "./models/user";
 import {DataSource} from "typeorm";
 import {Seller} from "./models/seller";
 import {Product} from "./models/product";
+import {OffererModule} from "./modules/offerer/offerer.module";
+import {ProductsModule} from "./modules/products/products.module";
+import {SellersModule} from "./modules/sellers/sellers.module";
+import {UsersModule} from "./modules/users/users.module";
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+
+
+
+
 
 @Module({
   imports: [
@@ -16,11 +26,17 @@ import {Product} from "./models/product";
         synchronize: true,
         autoLoadEntities: true,
       }),
+    //Import modules
+    OffererModule,
+    ProductsModule,
+    SellersModule,
+    UsersModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '../client/frontend/dist/'),
+    }),
+
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService]
 })
-export class AppModule {
-  constructor() {
-  }
-}
+export class AppModule {}

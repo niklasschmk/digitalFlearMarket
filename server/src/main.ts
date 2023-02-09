@@ -19,7 +19,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
   await app.listen(8080);
-
+/*
   app.use(
       session({
         secret: 'dfm-secret',
@@ -28,12 +28,13 @@ async function bootstrap() {
       }),
   );
 
+ */
   console.log('');
   console.log('-------------------------------------------------------------');
   console.log('                    ToDo-Backend läuft                       ');
   console.log('-------------------------------------------------------------');
-  console.log('       Liste abrufen:     http://localhost:8080/todolist     ');
-  console.log('       Frontend aufrufen: http://localhost:4200              ');
+  console.log('       Liste abrufen:     http://localhost:8080/             ');
+  //console.log('       Frontend aufrufen: http://localhost:4200              ');
   console.log('-------------------------------------------------------------');
 }
 bootstrap();

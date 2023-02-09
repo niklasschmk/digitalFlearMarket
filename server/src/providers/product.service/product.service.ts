@@ -20,7 +20,7 @@ export class ProductService {
     }
 
     async createNewProduct(dto: CreateProductRequestDto): Promise<Product> {
-        const product: Product = new Product(dto.userId, dto.name, dto.price, dto.negotiable, dto.description);
+        const product: Product = new Product(dto.userId, dto.name, dto.price, dto.negotiable, dto.description, dto.title);
         return this.productsRepository.save(product);
     }
 
@@ -31,6 +31,7 @@ export class ProductService {
             price: dto.price,
             negotiable: dto.negotiable,
             description: dto.description,
+            title: dto.title,
         });
     }
 

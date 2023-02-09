@@ -20,14 +20,18 @@ export class Product{
     @Column()
     description: string;
 
+    @Column()
+    title: string;
+
     //@OneToMany(type => Picture, picture => picture.productId)
     //pictures: Picture[];
 
-    constructor(userId: number, name: string, price: number, negotiable: boolean, description: string) {
+    constructor(userId: number, name: string, price: number, negotiable: boolean, description: string, title: string) {
         this.userId = userId;
         this.name = name;
         this.price = price;
         this.negotiable = negotiable;
         this.description = description;
+        this.title = title
     }
 }

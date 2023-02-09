@@ -15,4 +15,7 @@ export class CreateProductRequestDto{
 
     @IsString()
     description: string;
+
+    @IsString()
+    title: string;
 }

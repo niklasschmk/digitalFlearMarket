@@ -14,14 +14,15 @@ export class User{
 
     @Column()
     phoneNumber: string;
-
+/*
     @OneToMany(type => Product, product => product.userId)
     product: Product[];
+ */
 
     constructor(firstname: string, lastname: string, phoneNumber: string) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.phoneNumber = phoneNumber;
-        this.product = [];
+        //this.product = [];
     }
 }
