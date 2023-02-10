@@ -16,10 +16,14 @@ import {CreateProductResponseDto} from "../../dtos/products/CreateProductRespons
 import {ApiResponse} from "@nestjs/swagger";
 import {UpdateProductRequestDto} from "../../dtos/products/UpdateProductRequestDto";
 import {UpdateProductResponseDto} from "../../dtos/products/UpdateProductResponseDto";
+import {FavoriteProductService} from "../../providers/favorite-product.service/favorite-product.service";
+import {CreateFavoriteProductReqDto} from "../../dtos/favoriteProducts/CreateFavoriteProductReqDto";
+import {CreateFavoriteProductResDto} from "../../dtos/favoriteProducts/CreateFavoriteProductResDto";
 
 @Controller('product')
 export class ProductController {
-    constructor(private readonly productService: ProductService) {
+    constructor(private readonly productService: ProductService,
+                private readonly favoriteProductService: FavoriteProductService) {
     }
 
     @Get('/products')
@@ -34,13 +38,30 @@ export class ProductController {
     }
 
     @Get(':productId')
-    async getProductById(@Param('productId', ParseIntPipe) productId: number): Promise<Product> {
-
+    getProductById(@Param('productId', ParseIntPipe) productId: number): Promise<Product> {
         try {
             return this.productService.getProductById(productId);
         }catch (err) {
             throw new NotFoundException('There is no product with this id', {cause: err, description: 'A product with this id was not found.'})
         }
+    }
+
+    @Get('/productsOfSeller/:sellerId')
+    async getProductsOfSeller(@Param('sellerId', ParseIntPipe) sellerId: number): Promise<Product[]> {
+        let products: Product[] = []
+        try {
+            products = await this.productService.getProductsOfSeller(sellerId);
+            return products;
+        } catch (err) {
+            throw new BadRequestException('Something bad happened', { cause: err, description: 'Some error description' })
+        }
+    }
+
+    @Post('favorProduct')
+    @ApiResponse({type: CreateFavoriteProductReqDto})
+    favorProduct(@Body() body: CreateFavoriteProductReqDto): CreateFavoriteProductResDto {
+        this.favoriteProductService.favorProduct(body);
+        return new CreateFavoriteProductResDto(true);
     }
 
     @Post('/newProduct')

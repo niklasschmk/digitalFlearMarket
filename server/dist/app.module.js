@@ -5,6 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
@@ -14,13 +17,9 @@ const typeorm_1 = require("@nestjs/typeorm");
 const user_1 = require("./models/user");
 const seller_1 = require("./models/seller");
 const product_1 = require("./models/product");
-const offerer_module_1 = require("./modules/offerer/offerer.module");
-const products_module_1 = require("./modules/products/products.module");
-const sellers_module_1 = require("./modules/sellers/sellers.module");
-const users_module_1 = require("./modules/users/users.module");
-const serve_static_1 = require("@nestjs/serve-static");
-const path_1 = require("path");
 let AppModule = class AppModule {
+    constructor() {
+    }
 };
 AppModule = __decorate([
     (0, common_1.Module)({
@@ -32,17 +31,11 @@ AppModule = __decorate([
                 synchronize: true,
                 autoLoadEntities: true,
             }),
-            offerer_module_1.OffererModule,
-            products_module_1.ProductsModule,
-            sellers_module_1.SellersModule,
-            users_module_1.UsersModule,
-            serve_static_1.ServeStaticModule.forRoot({
-                rootPath: (0, path_1.join)(__dirname, '..', '../client/frontend/dist/'),
-            }),
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService]
-    })
+        providers: [app_service_1.AppService],
+    }),
+    __metadata("design:paramtypes", [])
 ], AppModule);
 exports.AppModule = AppModule;
 //# sourceMappingURL=app.module.js.map
