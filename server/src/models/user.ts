@@ -7,6 +7,12 @@ export class User{
     userId: number;
 
     @Column()
+    username: string;
+
+    @Column()
+    hashedPassword: string;
+
+    @Column()
     firstname: string;
 
     @Column()
@@ -21,7 +27,9 @@ export class User{
     product: Product[];
  */
 
-    constructor(firstname: string, lastname: string, phoneNumber: string) {
+    constructor(username: string, hashedPassword: string, firstname: string, lastname: string, phoneNumber: string) {
+        this.username = username;
+        this.hashedPassword = hashedPassword;
         this.firstname = firstname;
         this.lastname = lastname;
         this.phoneNumber = phoneNumber;

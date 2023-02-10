@@ -7,7 +7,7 @@ import {
     Param,
     ParseIntPipe,
     Post,
-    Put
+    Put, UseGuards
 } from '@nestjs/common';
 import {OffererService} from "../../providers/offerer.service/offerer.service";
 import {Offerer} from "../../models/offerer";
@@ -24,6 +24,7 @@ import {UpdateFavoriteProductReqDto} from "../../dtos/favoriteProducts/UpdateFav
 import {UpdateFavoriteProductResDto} from "../../dtos/favoriteProducts/UpdateFavoriteProductResDto";
 import {UpdateFavoriteSellerReqDto} from "../../dtos/favoriteSeller/UpdateFavoriteSellerReqDto";
 import {UpdateFavoriteSellerResDto} from "../../dtos/favoriteSeller/UpdateFavoriteSellerResDto";
+import {AuthGuard} from "../../guards/auth/auth.guard";
 
 @Controller('offerer')
 export class OffererController {
@@ -51,6 +52,7 @@ export class OffererController {
     }
 
     @Post('favorProduct')
+    @UseGuards(AuthGuard)
     @ApiResponse({type: CreateFavoriteProductReqDto})
     favorProduct(@Body() body: CreateFavoriteProductReqDto): CreateFavoriteProductResDto {
         try {
@@ -62,6 +64,7 @@ export class OffererController {
     }
 
     @Post('favorSeller')
+    @UseGuards(AuthGuard)
     @ApiResponse({type: CreateFavoriteSellerReqDto})
     favorSeller(@Body() body: CreateFavoriteSellerReqDto): CreateFavoriteSellerResDto {
         try {
@@ -71,7 +74,7 @@ export class OffererController {
             throw new BadRequestException('Something went wrong', {cause: err, description: 'Error description'});
         }
     }
-
+/*
     @Post('/newOfferer')
     @ApiResponse({type: CreateOffererRequestDto})
     createNewSeller(@Body() body: CreateOffererRequestDto): CreateOffererResponseDto {
@@ -81,9 +84,10 @@ export class OffererController {
         } catch (err) {
             throw new BadRequestException('Something went wrong', {cause: err, description: 'Error description'});
         }
-    }
+    }*/
 
     @Put('/noLongerFavorProduct/:userId')
+    @UseGuards(AuthGuard)
     noLongerFavorProduct(@Param('userId', ParseIntPipe) userId: number,
                          @Body() body: UpdateFavoriteProductReqDto): UpdateFavoriteProductResDto {
         try {
@@ -95,6 +99,7 @@ export class OffererController {
     }
 
     @Put('/noLongerFavorSeller/:userId')
+    @UseGuards(AuthGuard)
     noLongerFavorSeller(@Param('userId', ParseIntPipe) userId: number,
                          @Body() body: UpdateFavoriteSellerReqDto): UpdateFavoriteSellerResDto {
         try {
@@ -106,6 +111,7 @@ export class OffererController {
     }
 
     @Put('/updateOfferer/:userId')
+    @UseGuards(AuthGuard)
     updateOfferer(@Param('userId', ParseIntPipe) userId: number,
                  @Body() body: UpdateOffererRequestDto): UpdateOffererResponseDto {
         try {
@@ -117,6 +123,7 @@ export class OffererController {
     }
 
     @Delete('deleteOfferer/:userId')
+    @UseGuards(AuthGuard)
     deleteSellerById(@Param('userId', ParseIntPipe) userId: number): void {
         try {
             this.offererService.remove(userId);

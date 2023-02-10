@@ -5,6 +5,8 @@ import {Seller} from "../../models/seller";
 import {CreateSellerRequestDto} from "../../dtos/sellers/CreateSellerRequestDto";
 import {UpdateSellerRequestDto} from "../../dtos/sellers/UpdateSellerRequestDto";
 import {MessageResultDto} from "../../dtos/MessageResultDto";
+import * as bcrypt from "bcrypt";
+import {Offerer} from "../../models/offerer";
 
 @Injectable()
 export class SellerService {
@@ -20,8 +22,15 @@ export class SellerService {
     }
 
     async createNewSeller(dto: CreateSellerRequestDto): Promise<Seller> {
-        const seller: Seller = new Seller(dto.firstname, dto.lastname, dto.phoneNumber, dto.standNumber);
-        return this.sellersRepository.save(seller);
+        const saltRounds: number = 10;
+        let savedSeller;
+        bcrypt.genSalt(saltRounds, function (err, salt) {
+            bcrypt.hash(dto.hashedPassword, salt, function (err, hash) {
+                const seller: Seller = new Seller(dto.username, hash, dto.firstname, dto.lastname, dto.phoneNumber, dto.standNumber);
+                savedSeller = this.sellersRepository.save(seller);
+            });
+        });
+        return savedSeller;
     }
 
     async updateSeller(userId: number, dto: UpdateSellerRequestDto): Promise<void> {

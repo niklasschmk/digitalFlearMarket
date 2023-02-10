@@ -11,8 +11,8 @@ export class Seller extends User{
     @ManyToMany(type => Offerer, offerer => offerer.sellers)
     offerers: Offerer[];
 
-    constructor(firstname: string, lastname: string, phoneNumber: string, standNumber: number) {
-        super(firstname, lastname, phoneNumber);
+    constructor(username: string, password: string, firstname: string, lastname: string, phoneNumber: string, standNumber: number) {
+        super(username, password, firstname, lastname, phoneNumber);
         this.standNumber = standNumber;
     }
 }

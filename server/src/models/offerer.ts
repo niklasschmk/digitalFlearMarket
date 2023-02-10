@@ -23,8 +23,8 @@ export class Offerer extends User{
     sellers: Seller[];
 
 
-    constructor(firstname: string, lastname: string, phoneNumber: string) {
-        super(firstname, lastname, phoneNumber);
+    constructor(username: string, hashedPassword: string, firstname: string, lastname: string, phoneNumber: string) {
+        super(username, hashedPassword, firstname, lastname, phoneNumber);
         //this.favoriteProducts = [];
     }
 }

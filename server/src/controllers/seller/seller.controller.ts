@@ -7,7 +7,7 @@ import {
     Param,
     ParseIntPipe,
     Post,
-    Put
+    Put, UseGuards
 } from '@nestjs/common';
 import {SellerService} from "../../providers/seller.service/seller.service";
 import {Seller} from "../../models/seller";
@@ -19,6 +19,7 @@ import {UpdateSellerResponseDto} from "../../dtos/sellers/UpdateSellerResponseDt
 import {CreateFavoriteSellerReqDto} from "../../dtos/favoriteSeller/CreateFavoriteSellerReqDto";
 import {CreateFavoriteSellerResDto} from "../../dtos/favoriteSeller/CreateFavoriteSellerResDto";
 import {FavoriteSellerService} from "../../providers/favorite-seller.service/favorite-seller.service";
+import {AuthGuard} from "../../guards/auth/auth.guard";
 
 @Controller('seller')
 export class SellerController {
@@ -54,6 +55,7 @@ export class SellerController {
 
     @Post('/newSeller')
     @ApiResponse({type: CreateSellerRequestDto})
+    @UseGuards(AuthGuard)
     createNewSeller(@Body() body: CreateSellerRequestDto): CreateSellerResponseDto {
        try {
            this.sellerService.createNewSeller(body);
@@ -64,6 +66,7 @@ export class SellerController {
     }
 
     @Put('/updateSeller/:userId')
+    @UseGuards(AuthGuard)
     updateSeller(@Param('userId', ParseIntPipe) userId: number,
                  @Body() body: UpdateSellerRequestDto): UpdateSellerResponseDto {
         try {
@@ -75,6 +78,7 @@ export class SellerController {
     }
 
     @Delete('deleteSeller/:userId')
+    @UseGuards(AuthGuard)
     deleteSellerById(@Param('userId', ParseIntPipe) userId: number): void {
         try {
             this.sellerService.remove(userId);

@@ -71,7 +71,7 @@ async function bootstrap() {
   let server = await app.listen(8080, function (){
     console.log('listening for requests on port 8080');
   });
-  /*
+
   app.use(
       session({
         secret: 'dfm-secret',
@@ -79,7 +79,7 @@ async function bootstrap() {
         saveUninitialized: false,
       }),
   );
-
+  /*
   let sessionStore = new InMemorySessionStore();
   let messageStore = new MessageStore();
 

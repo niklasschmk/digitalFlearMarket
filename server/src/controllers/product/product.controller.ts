@@ -7,7 +7,7 @@ import {
     ParseIntPipe,
     Post, Put,
     Req,
-    Res
+    Res, UseGuards
 } from '@nestjs/common';
 import {Product} from "../../models/product";
 import {ProductService} from "../../providers/product.service/product.service";
@@ -19,6 +19,7 @@ import {UpdateProductResponseDto} from "../../dtos/products/UpdateProductRespons
 import {FavoriteProductService} from "../../providers/favorite-product.service/favorite-product.service";
 import {CreateFavoriteProductReqDto} from "../../dtos/favoriteProducts/CreateFavoriteProductReqDto";
 import {CreateFavoriteProductResDto} from "../../dtos/favoriteProducts/CreateFavoriteProductResDto";
+import {AuthGuard} from "../../guards/auth/auth.guard";
 
 @Controller('product')
 export class ProductController {
@@ -64,6 +65,7 @@ export class ProductController {
     }*/
 
     @Post('/newProduct')
+    @UseGuards(AuthGuard)
     @ApiResponse({type: CreateProductRequestDto})
     createNewProduct(@Body() body: CreateProductRequestDto): CreateProductResponseDto {
         this.productService.createNewProduct(body);
@@ -71,6 +73,7 @@ export class ProductController {
     }
 
     @Put('updateProduct/:productId')
+    @UseGuards(AuthGuard)
     updateProduct(@Param('productId', ParseIntPipe) productId: number,
                   @Body() body: UpdateProductRequestDto): UpdateProductResponseDto {
         this.productService.updateProduct(productId, body);
@@ -78,6 +81,7 @@ export class ProductController {
     }
 
     @Delete('/delete/:productId')
+    @UseGuards(AuthGuard)
     deleteProduct(@Param('productId', ParseIntPipe) productId: number): void {
         this.productService.remove(productId);
     }

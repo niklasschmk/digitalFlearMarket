@@ -1,11 +1,14 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import {ISession} from "../../ISession";
+import {Request} from 'express'
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
-    return true;
+  canActivate(context: ExecutionContext): boolean  {
+    const http = context.switchToHttp();
+    const request = http.getRequest<Request>();
+    const session = request.session as unknown as ISession;
+
+    return session.isLoggedIn == true;
   }
 }
