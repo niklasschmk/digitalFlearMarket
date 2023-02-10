@@ -8,9 +8,9 @@ import {CreateFavoriteProductReqDto} from "../../dtos/favoriteProducts/CreateFav
 export class FavoriteProductService {
     constructor(@InjectRepository(FavoriteProducts) private repo: Repository<FavoriteProducts>) {
     }
-
+/*
     async favorProduct(dto: CreateFavoriteProductReqDto): Promise<FavoriteProducts> {
         const fp: FavoriteProducts = new FavoriteProducts(dto.favId, dto.userId, dto.productId);
         return this.repo.save(fp);
-    }
+    }*/
 }

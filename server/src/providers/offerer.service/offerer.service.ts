@@ -7,6 +7,9 @@ import {MessageResultDto} from "../../dtos/MessageResultDto";
 import {Seller} from "../../models/seller";
 import {CreateOffererRequestDto} from "../../dtos/offerers/CreateOffererRequestDto";
 import {UpdateOffererRequestDto} from "../../dtos/offerers/UpdateOffererRequestDto";
+import {CreateFavoriteProductReqDto} from "../../dtos/favoriteProducts/CreateFavoriteProductReqDto";
+import {Product} from "../../models/product";
+import {CreateFavoriteSellerReqDto} from "../../dtos/favoriteSeller/CreateFavoriteSellerReqDto";
 
 @Injectable()
 export class OffererService {
@@ -33,6 +36,28 @@ export class OffererService {
             firstname: dto.firstname,
             lastname: dto.lastname,
             phoneNumber: dto.phoneNumber,
+        });
+    }
+
+    async favorProduct(dto: CreateFavoriteProductReqDto): Promise<void> {
+        const offerer: Offerer | null = await this.offererRepo.findOneBy({
+            userId: dto.userId,
+        });
+        const favProducts: Product[] = offerer.products;
+        favProducts.push(dto.product);
+        this.offererRepo.update(dto.userId, {
+            products: favProducts
+        })
+    }
+
+    async favorSeller(dto: CreateFavoriteSellerReqDto): Promise<void> {
+        const offerer: Offerer | null = await this.offererRepo.findOneBy({
+            userId: dto.userId,
+        });
+        const favSellers: Seller[] = offerer.sellers;
+        favSellers.push(dto.seller);
+        this.offererRepo.update(dto.userId, {
+            sellers: favSellers
         });
     }
 

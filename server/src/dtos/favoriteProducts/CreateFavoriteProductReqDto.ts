@@ -1,12 +1,13 @@
 import {IsNumber} from "class-validator";
+import {Product} from "../../models/product";
 
 export class CreateFavoriteProductReqDto {
-    @IsNumber()
-    favId: number;
+    //@IsNumber()
+    //favId: number;
 
     @IsNumber()
     userId: number;
 
     @IsNumber()
-    productId: number;
+    product: Product;
 }

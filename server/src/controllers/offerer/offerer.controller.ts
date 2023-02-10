@@ -16,6 +16,10 @@ import {CreateOffererRequestDto} from "../../dtos/offerers/CreateOffererRequestD
 import {CreateOffererResponseDto} from "../../dtos/offerers/CreateOffererResponseDto";
 import {UpdateOffererRequestDto} from "../../dtos/offerers/UpdateOffererRequestDto";
 import {UpdateOffererResponseDto} from "../../dtos/offerers/UpdateOffererResponseDto";
+import {CreateFavoriteProductReqDto} from "../../dtos/favoriteProducts/CreateFavoriteProductReqDto";
+import {CreateFavoriteProductResDto} from "../../dtos/favoriteProducts/CreateFavoriteProductResDto";
+import {CreateFavoriteSellerReqDto} from "../../dtos/favoriteSeller/CreateFavoriteSellerReqDto";
+import {CreateFavoriteSellerResDto} from "../../dtos/favoriteSeller/CreateFavoriteSellerResDto";
 
 @Controller('offerer')
 export class OffererController {
@@ -39,6 +43,28 @@ export class OffererController {
             return this.offererService.getOffererById(userId);
         } catch (err) {
             throw new NotFoundException('There is no user with this id', {cause: err, description: 'An user with this id was not found.'})
+        }
+    }
+
+    @Post('favorProduct')
+    @ApiResponse({type: CreateFavoriteProductReqDto})
+    favorProduct(@Body() body: CreateFavoriteProductReqDto): CreateFavoriteProductResDto {
+        try {
+            this.offererService.favorProduct(body);
+            return new CreateFavoriteProductResDto(true);
+        } catch (err) {
+            throw new BadRequestException('Something went wrong', {cause: err, description: 'Error description'});
+        }
+    }
+
+    @Post('favorSeller')
+    @ApiResponse({type: CreateFavoriteSellerReqDto})
+    favorSeller(@Body() body: CreateFavoriteSellerReqDto): CreateFavoriteSellerResDto {
+        try {
+            this.offererService.favorSeller(body);
+            return new CreateFavoriteSellerResDto(true);
+        } catch (err) {
+            throw new BadRequestException('Something went wrong', {cause: err, description: 'Error description'});
         }
     }
 

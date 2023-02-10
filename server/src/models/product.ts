@@ -1,4 +1,5 @@
-import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Offerer} from "./offerer";
 
 @Entity()
 export class Product{
@@ -22,6 +23,9 @@ export class Product{
 
     @Column()
     title: string;
+
+    @ManyToMany(type => Offerer, offerer => offerer.products)
+    offerers: Offerer[];
 
     //@OneToMany(type => Picture, picture => picture.productId)
     //pictures: Picture[];

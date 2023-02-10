@@ -22,8 +22,7 @@ import {CreateFavoriteProductResDto} from "../../dtos/favoriteProducts/CreateFav
 
 @Controller('product')
 export class ProductController {
-    constructor(private readonly productService: ProductService,
-                private readonly favoriteProductService: FavoriteProductService) {
+    constructor(private readonly productService: ProductService) {
     }
 
     @Get('/products')
@@ -57,12 +56,12 @@ export class ProductController {
         }
     }
 
-    @Post('favorProduct')
+/*    @Post('favorProduct')
     @ApiResponse({type: CreateFavoriteProductReqDto})
     favorProduct(@Body() body: CreateFavoriteProductReqDto): CreateFavoriteProductResDto {
         this.favoriteProductService.favorProduct(body);
         return new CreateFavoriteProductResDto(true);
-    }
+    }*/
 
     @Post('/newProduct')
     @ApiResponse({type: CreateProductRequestDto})

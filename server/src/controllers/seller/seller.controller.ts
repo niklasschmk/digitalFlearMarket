@@ -22,8 +22,7 @@ import {FavoriteSellerService} from "../../providers/favorite-seller.service/fav
 
 @Controller('seller')
 export class SellerController {
-    constructor(private readonly sellerService: SellerService,
-                private readonly favoriteSellerService: FavoriteSellerService) {
+    constructor(private readonly sellerService: SellerService) {
     }
 
     @Get('/sellers')
@@ -45,13 +44,13 @@ export class SellerController {
             throw new NotFoundException('There is no user with this id', {cause: err, description: 'An user with this id was not found.'})
         }
     }
-
+/*
     @Post('favorSeller')
     @ApiResponse({type: CreateFavoriteSellerReqDto})
     favorProduct(@Body() body: CreateFavoriteSellerReqDto): CreateFavoriteSellerResDto {
         this.favoriteSellerService.favorSeller(body);
         return new CreateFavoriteSellerResDto(true);
-    }
+    }*/
 
     @Post('/newSeller')
     @ApiResponse({type: CreateSellerRequestDto})
