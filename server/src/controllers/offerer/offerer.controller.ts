@@ -20,6 +20,10 @@ import {CreateFavoriteProductReqDto} from "../../dtos/favoriteProducts/CreateFav
 import {CreateFavoriteProductResDto} from "../../dtos/favoriteProducts/CreateFavoriteProductResDto";
 import {CreateFavoriteSellerReqDto} from "../../dtos/favoriteSeller/CreateFavoriteSellerReqDto";
 import {CreateFavoriteSellerResDto} from "../../dtos/favoriteSeller/CreateFavoriteSellerResDto";
+import {UpdateFavoriteProductReqDto} from "../../dtos/favoriteProducts/UpdateFavoriteProductReqDto";
+import {UpdateFavoriteProductResDto} from "../../dtos/favoriteProducts/UpdateFavoriteProductResDto";
+import {UpdateFavoriteSellerReqDto} from "../../dtos/favoriteSeller/UpdateFavoriteSellerReqDto";
+import {UpdateFavoriteSellerResDto} from "../../dtos/favoriteSeller/UpdateFavoriteSellerResDto";
 
 @Controller('offerer')
 export class OffererController {
@@ -74,6 +78,28 @@ export class OffererController {
         try {
             this.offererService.createNewOfferer(body);
             return new CreateOffererResponseDto(true);
+        } catch (err) {
+            throw new BadRequestException('Something went wrong', {cause: err, description: 'Error description'});
+        }
+    }
+
+    @Put('/noLongerFavorProduct/:userId')
+    noLongerFavorProduct(@Param('userId', ParseIntPipe) userId: number,
+                         @Body() body: UpdateFavoriteProductReqDto): UpdateFavoriteProductResDto {
+        try {
+            this.offererService.noLongerFavorProduct(userId, body);
+            return new UpdateFavoriteProductResDto(true);
+        } catch (err) {
+            throw new BadRequestException('Something went wrong', {cause: err, description: 'Error description'});
+        }
+    }
+
+    @Put('/noLongerFavorSeller/:userId')
+    noLongerFavorSeller(@Param('userId', ParseIntPipe) userId: number,
+                         @Body() body: UpdateFavoriteSellerReqDto): UpdateFavoriteSellerResDto {
+        try {
+            this.offererService.noLongerFavorSeller(userId, body);
+            return new UpdateFavoriteSellerResDto(true);
         } catch (err) {
             throw new BadRequestException('Something went wrong', {cause: err, description: 'Error description'});
         }
