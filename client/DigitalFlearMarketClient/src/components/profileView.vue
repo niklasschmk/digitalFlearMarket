@@ -1,11 +1,18 @@
 <template>
 <div class="row">
  <div class="col-md-3 col-12">
-   <b class="text-center">{{profile.firstname}} {{profile.lastname}}</b><br>
-   Standnummer: {{profile.standNumber}}<br>
-   Telefon: {{profile.phoneNumber}}
+   <div class="mb-5 offerrerInfo">
+     <h2 class="text-center">Informationen</h2>
+     <hr class="m-4">
+     <b class="text-center">{{profile.firstname}} {{profile.lastname}}</b><br>
+     <p>Standnummer: {{profile.standNumber}}</p>
+     <p>Telefon: {{profile.phoneNumber}}</p>
+     <button class="btn btn-outline-success" v-if="followOfferrer===false"><font-awesome-icon icon="fa-solid fa-user-plus" /> Folgen</button>
+     <button class="btn btn-success" v-if="followOfferrer===true"><font-awesome-icon icon="fa-solid fa-user-plus" /> Gefolgt</button>
+   </div>
  </div>
- <div class="col-md-9 col-12">
+ <div class="col-md-8 col-12">
+   <h2 class="text-center">Offene Angebote</h2>
    <div v-for="offer in products" :key="offer">
      <div class="row mb-3 offer-box">
        <div class="col-md-3 col-12 mb-3">
@@ -37,11 +44,12 @@ export default {
       id: new URLSearchParams(window.location.search).get('id'),
       profile:{},
       products:[],
+      followOfferrer:false
     }
   },
   beforeMount() {
     this.getThisProfile()
-    this.getAll()
+    this.getAllOffers()
   },
 
   methods:{
@@ -53,7 +61,7 @@ export default {
             console.log(response.data)
           })
     },
-    getAll(){
+    getAllOffers(){
       this.axios.get(this.apiurl+'product/products')
           .then((response) => {
             for (let i = 0; i < response.data.length; i++) {
@@ -78,4 +86,8 @@ export default {
   border-radius: 1rem;
   padding: 1rem;
 }
+.offerrerInfo>*{
+  margin-top: .5rem;
+}
+
 </style>

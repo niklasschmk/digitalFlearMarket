@@ -21,7 +21,7 @@ let AppController = class AppController {
         this.appService = appService;
     }
     root(response) {
-        response.sendFile(path.resolve('../client/frontend/dist/index.html'));
+        response.sendFile(path.resolve('../client/DigitalFlearMarketClient/dist/index.html'));
     }
     getHello() {
         return this.appService.getHello();

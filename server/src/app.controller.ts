@@ -8,7 +8,7 @@ export class AppController {
 
   @Get()
   root(@Res() response): void {
-    response.sendFile(path.resolve('../client/frontend/dist/index.html'));
+    response.sendFile(path.resolve('../client/DigitalFlearMarketClient/dist/index.html'));
   }
 
 

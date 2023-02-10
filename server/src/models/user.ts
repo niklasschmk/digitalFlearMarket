@@ -14,6 +14,12 @@ export class User{
 
     @Column()
     phoneNumber: string;
+
+    @Column()
+    loginname: string;
+
+    @Column()
+    password: string;
 /*
     @OneToMany(type => Product, product => product.userId)
     product: Product[];

@@ -24,18 +24,21 @@
         </button>
         <hr>
         <div style="text-align: left">
-          <div class="row">
-            <div class="col">
+            <div class="mb-3">
               Verkäufer: <b>{{product.name}}</b>
             </div>
+          <div class="row">
             <div class="col">
-              <button class="btn btn-outline-success" v-if="followOfferrer===false">Folgen</button>
-              <button class="btn btn-success" v-if="followOfferrer===true">Gefolgt</button>
+              <button class="btn btn-outline-success" v-if="followOfferrer===false"><font-awesome-icon icon="fa-solid fa-user-plus" /> Folgen</button>
+              <button class="btn btn-success" v-if="followOfferrer===true"><font-awesome-icon icon="fa-solid fa-user-plus" /> Gefolgt</button>
+            </div>
+            <div class="col">
+              <router-link :to="{ name: 'profile', query: {id: product.userId }}" class="btn btn-primary">
+                Händlerprofil
+              </router-link>
             </div>
           </div>
-          <router-link :to="{ name: 'profile', query: {id: product.userId }}" class="btn btn-primary">
-            Händlerprofil
-          </router-link>
+
         </div>
       </div>
     </div>

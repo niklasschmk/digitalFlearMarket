@@ -15,10 +15,10 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 //import font awesome icons
-import { faStar } from '@fortawesome/free-solid-svg-icons'
+import { faStar, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 
 //adding imported icons to the library
-library.add(faStar)
+library.add(faStar, faUserPlus)
 
 
 

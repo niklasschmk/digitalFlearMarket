@@ -12,6 +12,8 @@ import {SellersModule} from "./modules/sellers/sellers.module";
 import {UsersModule} from "./modules/users/users.module";
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import {FavoriteProductModule} from "./modules/favorite-product/favorite-product.module";
+import {FavoriteSellerModule} from "./modules/favorite-seller/favorite-seller.module";
 
 
 
@@ -31,8 +33,10 @@ import { join } from 'path';
     ProductsModule,
     SellersModule,
     UsersModule,
+    FavoriteProductModule,
+    FavoriteSellerModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '../client/frontend/dist/'),
+      rootPath: join(__dirname, '..', '../client/DigitalFlearMarketClient/dist/'),
     }),
 
   ],

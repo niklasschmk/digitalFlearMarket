@@ -10,7 +10,7 @@ export class FavoriteProductService {
     }
 
     async favorProduct(dto: CreateFavoriteProductReqDto): Promise<FavoriteProducts> {
-        const fp: FavoriteProducts = new FavoriteProducts(dto.userId, dto.productId);
+        const fp: FavoriteProducts = new FavoriteProducts(dto.favId, dto.userId, dto.productId);
         return this.repo.save(fp);
     }
 }

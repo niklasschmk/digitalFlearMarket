@@ -79,6 +79,7 @@ async function bootstrap() {
         saveUninitialized: false,
       }),
   );
+  /*
   let sessionStore = new InMemorySessionStore();
   let messageStore = new MessageStore();
 
@@ -203,6 +204,8 @@ async function bootstrap() {
       socket.broadcast.emit('erase', data);
     });
   });
+
+   */
   console.log('');
   console.log('-------------------------------------------------------------');
   console.log('                    ToDo-Backend läuft                       ');
