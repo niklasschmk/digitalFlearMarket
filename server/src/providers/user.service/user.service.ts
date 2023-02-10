@@ -28,8 +28,6 @@ export class UserService {
             firstname: dto.firstname,
             lastname: dto.lastname,
             phoneNumber: dto.phoneNumber,
-            loginname: dto.loginname,
-            password: dto.password
         });
     }
 

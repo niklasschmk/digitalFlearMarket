@@ -13,12 +13,4 @@ export class CreateUserRequestDto{
     @IsString()
     @ApiProperty()
     phoneNumber: string;
-
-    @IsString()
-    @ApiProperty()
-    loginname: string;
-
-    @IsString()
-    @ApiProperty()
-    password: string;
 }

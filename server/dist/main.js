@@ -4,7 +4,6 @@ const core_1 = require("@nestjs/core");
 const app_module_1 = require("./app.module");
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
-const express_session_1 = require("express-session");
 class InMemorySessionStore {
     constructor(sessionService) {
         this.sessionService = sessionService;
@@ -49,11 +48,6 @@ async function bootstrap() {
     let server = await app.listen(8080, function () {
         console.log('listening for requests on port 8080');
     });
-    app.use((0, express_session_1.default)({
-        secret: 'dfm-secret',
-        resave: false,
-        saveUninitialized: false,
-    }));
     console.log('');
     console.log('-------------------------------------------------------------');
     console.log('                    ToDo-Backend läuft                       ');
