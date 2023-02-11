@@ -22,6 +22,7 @@ const serve_static_1 = require("@nestjs/serve-static");
 const path_1 = require("path");
 const favorite_product_module_1 = require("./modules/favorite-product/favorite-product.module");
 const favorite_seller_module_1 = require("./modules/favorite-seller/favorite-seller.module");
+const auth_module_1 = require("./modules/auth/auth.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -40,6 +41,7 @@ AppModule = __decorate([
             users_module_1.UsersModule,
             favorite_product_module_1.FavoriteProductModule,
             favorite_seller_module_1.FavoriteSellerModule,
+            auth_module_1.AuthModule,
             serve_static_1.ServeStaticModule.forRoot({
                 rootPath: (0, path_1.join)(__dirname, '..', '../client/DigitalFlearMarketClient/dist/'),
             }),

@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import {ValidationPipe} from "@nestjs/common";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
-import session from "express-session";
+import * as session from "express-session";
 import {Server} from "socket.io";
 import {ChatmessageService} from "./providers/chatmessage.service/chatmessage.service";
 import {SessionService} from "./providers/session.service/session.service";

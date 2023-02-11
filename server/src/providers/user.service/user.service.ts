@@ -19,7 +19,7 @@ export class UserService {
     }
 
     async createNewUser(dto: CreateUserRequestDto): Promise<User>{
-        const user: User = new User(dto.firstname, dto.lastname, dto.phoneNumber);
+        const user: User = new User(dto.firstname, dto.lastname, dto.phoneNumber, dto.hashedPassword, dto.username);
         return this.usersRepository.save(user);
     }
 

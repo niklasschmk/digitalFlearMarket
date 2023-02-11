@@ -62,7 +62,7 @@ export default {
           })
     },
     getAllOffers(){
-      this.axios.get(this.apiurl+'seller/'+this.id)
+      this.axios.get(this.apiurl+'product/productsOfSeller/'+this.id)
           .then((response) => {
             for (let i = 0; i < response.data.length; i++) {
               this.products.push(response.data[i])

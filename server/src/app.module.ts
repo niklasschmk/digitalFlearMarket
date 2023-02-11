@@ -14,6 +14,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import {FavoriteProductModule} from "./modules/favorite-product/favorite-product.module";
 import {FavoriteSellerModule} from "./modules/favorite-seller/favorite-seller.module";
+import {AuthModule} from "./modules/auth/auth.module";
 
 
 
@@ -35,6 +36,7 @@ import {FavoriteSellerModule} from "./modules/favorite-seller/favorite-seller.mo
     UsersModule,
     FavoriteProductModule,
     FavoriteSellerModule,
+    AuthModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '../client/DigitalFlearMarketClient/dist/'),
     }),
