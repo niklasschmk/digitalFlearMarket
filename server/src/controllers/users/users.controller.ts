@@ -43,7 +43,7 @@ export class UsersController {
             throw new NotFoundException('There is no user with this id', {cause: err, description: 'An user with this id was not found.'})
         }
     }
-
+/*
     @Post('/newUser')
     @ApiResponse({type: CreateUserRequestDto})
     createNewUser(@Body() body: CreateUserRequestDto): CreateUserResponseDto {
@@ -53,7 +53,7 @@ export class UsersController {
         } catch (err) {
             throw new BadRequestException('Something went wrong', {cause: err, description: 'Error description'});
         }
-    }
+    }*/
 
     @Put('/updateUser/:userId')
     updateUser(@Param('userId', ParseIntPipe) userId: number, @Body() body: UpdateUserRequestDto): UpdateUserResponseDto{

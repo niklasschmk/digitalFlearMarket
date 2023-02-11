@@ -30,6 +30,7 @@ import {AuthModule} from "./modules/auth/auth.module";
         autoLoadEntities: true,
       }),
     //Import modules
+    AuthModule,
     OffererModule,
     ProductsModule,
     SellersModule,

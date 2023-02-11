@@ -17,11 +17,11 @@ export class UserService {
     getUserById(userId: number): Promise<User> {
         return this.usersRepository.findOneBy({ userId });
     }
-
+/*
     async createNewUser(dto: CreateUserRequestDto): Promise<User>{
         const user: User = new User(dto.firstname, dto.lastname, dto.phoneNumber, dto.hashedPassword, dto.username);
         return this.usersRepository.save(user);
-    }
+    }*/
 
     async updateUser(userId: number, dto: UpdateUserRequestDto): Promise<void> {
         await this.usersRepository.update(userId, {
