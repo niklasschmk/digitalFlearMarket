@@ -74,7 +74,7 @@ export class OffererController {
             throw new BadRequestException('Something went wrong', {cause: err, description: 'Error description'});
         }
     }
-/*
+
     @Post('/newOfferer')
     @ApiResponse({type: CreateOffererRequestDto})
     createNewSeller(@Body() body: CreateOffererRequestDto): CreateOffererResponseDto {
@@ -84,7 +84,7 @@ export class OffererController {
         } catch (err) {
             throw new BadRequestException('Something went wrong', {cause: err, description: 'Error description'});
         }
-    }*/
+    }
 
     @Put('/noLongerFavorProduct/:userId')
     @UseGuards(AuthGuard)

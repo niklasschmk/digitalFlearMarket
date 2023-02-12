@@ -31,6 +31,18 @@ export class AuthService {
     }
 
     checkPassword(dtoPassword: string, hashedPassword: string, role: string, session: ISession): boolean {
+        if (dtoPassword===hashedPassword){
+            session.isLoggedIn = true;
+            session.role = role;
+            return true;
+        } else {
+            throw new UnauthorizedException();
+        }
+        ;
+        return false;
+    }
+    /*OLD FUNCTION
+    checkPassword(dtoPassword: string, hashedPassword: string, role: string, session: ISession): boolean {
         bcrypt.compare(dtoPassword, hashedPassword, function (err, result) {
             if (result) {
                 session.isLoggedIn = true;
@@ -42,6 +54,8 @@ export class AuthService {
         });
         return false;
     }
+
+     */
 
     register(dto: RegisterReqDto) {
         const saltRounds: number = 10;

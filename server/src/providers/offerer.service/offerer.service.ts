@@ -28,11 +28,11 @@ export class OffererService {
         });
     }
 
-    /*
+
     async createNewOfferer(dto: CreateOffererRequestDto): Promise<Offerer> {
-        const offerer: Offerer = new Offerer(dto.firstname, dto.lastname, dto.phoneNumber);
+        const offerer: Offerer = new Offerer(dto.username, dto.hashedPassword, dto.firstname, dto.lastname, dto.phoneNumber);
         return this.offererRepo.save(offerer);
-    }*/
+    }
 
     async updateOfferer(userId: number, dto: UpdateOffererRequestDto): Promise<void> {
         await this.offererRepo.update(userId, {

@@ -37,7 +37,6 @@ import {AuthModule} from "./modules/auth/auth.module";
     UsersModule,
     FavoriteProductModule,
     FavoriteSellerModule,
-    AuthModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '../client/DigitalFlearMarketClient/dist/'),
     }),
