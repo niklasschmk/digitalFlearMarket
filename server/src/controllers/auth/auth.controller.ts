@@ -8,6 +8,7 @@ import {RegisterReqDto} from "../../dtos/auth/RegisterReqDto";
 import {RegisterResDto} from "../../dtos/auth/RegisterResDto";
 import {OffererService} from "../../providers/offerer.service/offerer.service";
 import {Offerer} from "../../models/offerer";
+import * as bcrypt from "bcrypt";
 
 
 @Controller('auth')
@@ -44,9 +45,23 @@ export class AuthController {
     @Post('register')
     @ApiResponse({type: RegisterReqDto})
     async register(@Body() body: RegisterReqDto): Promise<RegisterResDto> {
-        const hashedPassword: string = this.authService.hashingPassword(body.hashedPassword);
+        /*
+        const hashedPassword: string = await this.authService.hashingPassword(body.hashedPassword);
+        console.log(hashedPassword);
+        console.log(body.hashedPassword);
         body.hashedPassword = hashedPassword;
-        await this.offererService.createNewOfferer(body);
+        console.log(body.hashedPassword);
+        await this.offererService.createNewOfferer(body);*/
+        //const offerer: Offerer = this.authService.register(body);
+        //body.hashedPassword = offerer.hashedPassword;
+        const saltRounds: number = 10;
+        bcrypt.genSalt(saltRounds, function (err, salt) {
+            bcrypt.hash(body.hashedPassword, salt, function (err, hash) {
+                console.log(hash);
+                body.hashedPassword = hash;
+            });
+        });
+        this.offererService.createNewOfferer(body);
         return new RegisterResDto(true);
     }
 

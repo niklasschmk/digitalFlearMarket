@@ -59,24 +59,29 @@ export class AuthService {
 
      */
 
-    register(dto: RegisterReqDto) {
+    register(dto: RegisterReqDto): Offerer {
         const saltRounds: number = 10;
+        let offerer: Offerer;
         bcrypt.genSalt(saltRounds, function (err, salt) {
             bcrypt.hash(dto.hashedPassword, salt, function (err, hash) {
-                const offerer: Offerer = new Offerer(dto.username, hash, dto.firstname, dto.lastname, dto.phoneNumber);
-                this.offererRepo.save(offerer);
+                console.log(hash);
+                offerer = new Offerer(dto.username, hash, dto.firstname, dto.lastname, dto.phoneNumber);
             });
         });
+        return offerer;
     }
 
-    hashingPassword(password: string): string{
+    async hashingPassword(password: string): Promise<string>{
         const saltRounds: number = 10;
         let hashedPassword: string;
+        console.log(password);
         bcrypt.genSalt(saltRounds, function (err, salt) {
             bcrypt.hash(password, salt, function (err, hash) {
+                console.log(hash);
                 hashedPassword = hash;
             });
         });
+        console.log(hashedPassword);
         return hashedPassword;
     }
 
