@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, Session} from '@nestjs/common';
+import {BadRequestException, Body, Controller, Get, Post, Session} from '@nestjs/common';
 import {AuthService} from "../../modules/auth/auth.service";
 import {ApiResponse} from "@nestjs/swagger";
 import {LoginReqDto} from "../../dtos/auth/LoginReqDto";
@@ -7,6 +7,7 @@ import {ISession} from "../../ISession";
 import {RegisterReqDto} from "../../dtos/auth/RegisterReqDto";
 import {RegisterResDto} from "../../dtos/auth/RegisterResDto";
 import {OffererService} from "../../providers/offerer.service/offerer.service";
+import {Offerer} from "../../models/offerer";
 
 
 @Controller('auth')
@@ -15,8 +16,15 @@ export class AuthController {
     }
     
     @Get('checkLogin')
-    checkLogin(@Session() session: ISession): boolean{
-        return session.isLoggedIn;
+    checkLogin(@Session() session: ISession): Promise<Offerer>{
+        try {
+            if (session.isLoggedIn){
+                return this.offererService.getOffererByUsername(session.username);
+            }
+        } catch (e) {
+            throw new BadRequestException();
+        }
+
     }
 
     @Post('login')

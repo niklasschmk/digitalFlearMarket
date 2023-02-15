@@ -1,4 +1,5 @@
 export interface ISession{
     isLoggedIn?: boolean;
-    //role: string;
+    username?: string;
+    role?: string;
 }

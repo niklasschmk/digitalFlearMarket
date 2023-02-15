@@ -23,18 +23,19 @@ export class AuthService {
         const offerer: Offerer = await this.offererService.getOffererByUsername(dto.username);
         const seller: Seller = await this.sellerService.getSellerByUsername(dto.username);
         if (offerer) {
-            return this.checkPassword(dto.password, offerer.hashedPassword, 'Offerer', session);
+            return this.checkPassword(dto, offerer.hashedPassword, 'Offerer', session);
         }
         if (seller) {
-            return this.checkPassword(dto.password, seller.hashedPassword, 'Seller', session);
+            return this.checkPassword(dto, seller.hashedPassword, 'Seller', session);
         }
     }
 
-    checkPassword(dtoPassword: string, hashedPassword: string, role: string, session: ISession): boolean {
-        bcrypt.compare(dtoPassword, hashedPassword, function (err, result) {
+    checkPassword(dto: LoginReqDto, hashedPassword: string, role: string, session: ISession): boolean {
+        bcrypt.compare(dto.password, hashedPassword, function (err, result) {
             if (result) {
                 session.isLoggedIn = true;
-                //session.role = role;
+                session.role = role;
+                session.username = dto.username;
                 return true;
             } else {
                 throw new UnauthorizedException();
@@ -81,5 +82,7 @@ export class AuthService {
 
     logout(session: ISession) {
         session.isLoggedIn = false;
+        session.role = 'undefined';
+        session.username = '';
     }
 }
