@@ -10,20 +10,18 @@ import {Offerer} from "../../models/offerer";
 import {ISession} from "../../ISession";
 import {Seller} from "../../models/seller";
 import {OffererService} from "../../providers/offerer.service/offerer.service";
+import {SellerService} from "../../providers/seller.service/seller.service";
 
 @Injectable()
 export class AuthService {
     constructor(@InjectRepository(Seller) private sellerRepo: Repository<Seller>,
                 @InjectRepository(Offerer) private offererRepo: Repository<Offerer>,
-                private readonly offererService: OffererService) {
+                private readonly offererService: OffererService,
+                private readonly sellerService: SellerService) {
     }
     async login(session: ISession,dto: LoginReqDto): Promise<boolean> {
-        const offerer: Offerer = await this.offererRepo.findOneBy({
-            username: dto.username,
-        });
-        const seller: Seller = await this.sellerRepo.findOneBy({
-            username: dto.username,
-        });
+        const offerer: Offerer = await this.offererService.getOffererByUsername(dto.username);
+        const seller: Seller = await this.sellerService.getSellerByUsername(dto.username);
         if (offerer) {
             return this.checkPassword(dto.password, offerer.hashedPassword, 'Offerer', session);
         }

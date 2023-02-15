@@ -28,6 +28,12 @@ export class OffererService {
         });
     }
 
+    getOffererByUsername(username: string): Promise<Offerer> {
+        return this.offererRepo.findOneBy({
+            username: username,
+        });
+    }
+
 
     async createNewOfferer(dto: CreateOffererRequestDto): Promise<Offerer> {
         const offerer: Offerer = new Offerer(dto.username, dto.hashedPassword, dto.firstname, dto.lastname, dto.phoneNumber);

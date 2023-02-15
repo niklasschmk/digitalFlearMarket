@@ -1,10 +1,13 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {User} from "../../models/user";
 import {DataSource, Repository} from "typeorm";
 import {CreateUserRequestDto} from "../../dtos/users/CreateUserRequestDto";
 import {UpdateUserRequestDto} from "../../dtos/users/UpdateUserRequestDto";
 import {MessageResultDto} from "../../dtos/MessageResultDto";
+import {LoginReqDto} from "../../dtos/auth/LoginReqDto";
+import {ISession} from "../../ISession";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UserService {
@@ -17,11 +20,32 @@ export class UserService {
     getUserById(userId: number): Promise<User> {
         return this.usersRepository.findOneBy({ userId });
     }
-/*
+
+    async adminLogin(session: ISession, dto: LoginReqDto): Promise<boolean> {
+        const user: User = await this.usersRepository.findOneBy({
+            username: dto.username,
+        });
+        if (user) {
+            return this.checkPassword(dto.password, user.hashedPassword, session);
+        }
+    }
+
+    checkPassword(dtoPassword: string, hashedPassword: string, session: ISession): boolean {
+        bcrypt.compare(dtoPassword, hashedPassword, function (err, result) {
+            if (result) {
+                session.isLoggedIn = true;
+                return true;
+            } else {
+                throw new UnauthorizedException();
+            }
+        });
+        return false;
+    }
+
     async createNewUser(dto: CreateUserRequestDto): Promise<User>{
         const user: User = new User(dto.firstname, dto.lastname, dto.phoneNumber, dto.hashedPassword, dto.username);
         return this.usersRepository.save(user);
-    }*/
+    }
 
     async updateUser(userId: number, dto: UpdateUserRequestDto): Promise<void> {
         await this.usersRepository.update(userId, {

@@ -21,6 +21,10 @@ export class SellerService {
         return this.sellersRepository.findOneBy({userId: userId});
     }
 
+    getSellerByUsername(username: string): Promise<Seller> {
+        return this.sellersRepository.findOneBy({username: username});
+    }
+
     async createNewSeller(dto: CreateSellerRequestDto): Promise<Seller> {
         const saltRounds: number = 10;
         let savedSeller;

@@ -8,7 +8,7 @@ import {
     Param,
     ParseIntPipe,
     Post,
-    Put
+    Put, Session
 } from '@nestjs/common';
 import {UserService} from "../../providers/user.service/user.service";
 import {User} from "../../models/user";
@@ -18,6 +18,9 @@ import {CreateUserResponseDto} from "../../dtos/users/CreateUserResponseDto";
 import {UpdateUserRequestDto} from "../../dtos/users/UpdateUserRequestDto";
 import {UpdateUserResponseDto} from "../../dtos/users/UpdateUserResponseDto";
 import {MessageResultDto} from "../../dtos/MessageResultDto";
+import {LoginReqDto} from "../../dtos/auth/LoginReqDto";
+import {LoginResDto} from "../../dtos/auth/LoginResDto";
+import {ISession} from "../../ISession";
 
 @Controller('users')
 export class UsersController {
@@ -43,7 +46,7 @@ export class UsersController {
             throw new NotFoundException('There is no user with this id', {cause: err, description: 'An user with this id was not found.'})
         }
     }
-/*
+
     @Post('/newUser')
     @ApiResponse({type: CreateUserRequestDto})
     createNewUser(@Body() body: CreateUserRequestDto): CreateUserResponseDto {
@@ -53,7 +56,17 @@ export class UsersController {
         } catch (err) {
             throw new BadRequestException('Something went wrong', {cause: err, description: 'Error description'});
         }
-    }*/
+    }
+
+    @Post('/adminLogin')
+    adminLogin(@Session() session: ISession, @Body() body: LoginReqDto): LoginResDto {
+        try {
+            this.userService.adminLogin(session, body);
+            return new LoginResDto(true);
+        } catch (err) {
+            throw new BadRequestException('Something went wrong', {cause: err, description: 'Error description'});
+        }
+    }
 
     @Put('/updateUser/:userId')
     updateUser(@Param('userId', ParseIntPipe) userId: number, @Body() body: UpdateUserRequestDto): UpdateUserResponseDto{
