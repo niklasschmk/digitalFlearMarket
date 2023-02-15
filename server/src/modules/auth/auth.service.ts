@@ -80,7 +80,6 @@ export class AuthService {
     }
 
     logout(session: ISession) {
-        session.isLoggedIn = undefined;
-        //session.role = undefined;
+        session.isLoggedIn = false;
     }
 }

@@ -1,4 +1,4 @@
-import {Body, Controller, Post, Session} from '@nestjs/common';
+import {Body, Controller, Get, Post, Session} from '@nestjs/common';
 import {AuthService} from "../../modules/auth/auth.service";
 import {ApiResponse} from "@nestjs/swagger";
 import {LoginReqDto} from "../../dtos/auth/LoginReqDto";
@@ -13,6 +13,12 @@ import {OffererService} from "../../providers/offerer.service/offerer.service";
 export class AuthController {
     constructor(private readonly authService: AuthService, private readonly offererService: OffererService) {
     }
+    
+    @Get('checkLogin')
+    checkLogin(@Session() session: ISession): boolean{
+        return session.isLoggedIn;
+    }
+
     @Post('login')
     @ApiResponse({type: LoginReqDto})
     login(@Session() session: ISession, @Body() body: LoginReqDto): LoginResDto {
