@@ -7,7 +7,7 @@ export class AuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean  {
     const http = context.switchToHttp();
     const request = http.getRequest<Request>();
-    const session = request.session as unknown as ISession;
+    const session = request.session as ISession;
 
     return session.isLoggedIn == true;
   }

@@ -9,11 +9,13 @@ import * as bcrypt from "bcrypt"
 import {Offerer} from "../../models/offerer";
 import {ISession} from "../../ISession";
 import {Seller} from "../../models/seller";
+import {OffererService} from "../../providers/offerer.service/offerer.service";
 
 @Injectable()
 export class AuthService {
     constructor(@InjectRepository(Seller) private sellerRepo: Repository<Seller>,
-                @InjectRepository(Offerer) private offererRepo: Repository<Offerer>) {
+                @InjectRepository(Offerer) private offererRepo: Repository<Offerer>,
+                private readonly offererService: OffererService) {
     }
     async login(session: ISession,dto: LoginReqDto): Promise<boolean> {
         const offerer: Offerer = await this.offererRepo.findOneBy({
@@ -31,27 +33,28 @@ export class AuthService {
     }
 
     checkPassword(dtoPassword: string, hashedPassword: string, role: string, session: ISession): boolean {
-        if (dtoPassword===hashedPassword){
-            session.isLoggedIn = true;
-            session.role = role;
-            return true;
-        } else {
-            throw new UnauthorizedException();
-        }
-        ;
-        return false;
-    }
-    /*OLD FUNCTION
-    checkPassword(dtoPassword: string, hashedPassword: string, role: string, session: ISession): boolean {
         bcrypt.compare(dtoPassword, hashedPassword, function (err, result) {
             if (result) {
                 session.isLoggedIn = true;
-                session.role = role;
+                //session.role = role;
                 return true;
             } else {
                 throw new UnauthorizedException();
             }
         });
+        return false;
+    }
+
+    /*OLD FUNCTION
+        checkPassword(dtoPassword: string, hashedPassword: string, role: string, session: ISession): boolean {
+        if (dtoPassword===hashedPassword){
+            session.isLoggedIn = true;
+            //session.role = role;
+            return true;
+        } else {
+            throw new UnauthorizedException();
+        }
+        ;
         return false;
     }
 
@@ -67,8 +70,19 @@ export class AuthService {
         });
     }
 
+    hashingPassword(password: string): string{
+        const saltRounds: number = 10;
+        let hashedPassword: string;
+        bcrypt.genSalt(saltRounds, function (err, salt) {
+            bcrypt.hash(password, salt, function (err, hash) {
+                hashedPassword = hash;
+            });
+        });
+        return hashedPassword;
+    }
+
     logout(session: ISession) {
         session.isLoggedIn = undefined;
-        session.role = undefined;
+        //session.role = undefined;
     }
 }
