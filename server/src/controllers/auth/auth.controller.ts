@@ -31,8 +31,12 @@ export class AuthController {
     @Post('login')
     @ApiResponse({type: LoginReqDto})
     login(@Session() session: ISession, @Body() body: LoginReqDto): LoginResDto {
-        this.authService.login(session, body).then();
-        return new LoginResDto(true);
+        try {
+            this.authService.login(session, body).then();
+            return new LoginResDto(true);
+        } catch (e) {
+            throw new BadRequestException();
+        }
     }
 /* Old register
     @Post('register')
