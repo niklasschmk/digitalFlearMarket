@@ -36,7 +36,7 @@ export class AuthController {
         return new RegisterResDto(true);
     }
 
-    @Post('logut')
+    @Post('logout')
     logout(@Session() session: ISession): void {
         this.authService.logout(session);
     }
