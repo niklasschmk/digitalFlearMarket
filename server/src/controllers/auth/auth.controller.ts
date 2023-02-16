@@ -30,15 +30,14 @@ export class AuthController {
 
     @Post('login')
     @ApiResponse({type: LoginReqDto})
-    login(@Session() session: ISession, @Body() body: LoginReqDto): LoginResDto {
+    async login(@Session() session: ISession, @Body() body: LoginReqDto): Promise<LoginResDto> {
         try {
-            this.authService.login(session, body).then(role => {
-                if (role){
-                    session.isLoggedIn = true;
-                    session.role = role;
-                    session.username = body.username;
-                }
-            });
+            const role: string = await this.authService.login(session, body);
+            console.log(role);
+            console.log(session);
+            session.isLoggedIn = true;
+            session.role = role;
+            session.username = body.username;
             return new LoginResDto(true);
         } catch (e) {
             throw new BadRequestException('Something went wrong', {cause: e, description: 'Error description'});

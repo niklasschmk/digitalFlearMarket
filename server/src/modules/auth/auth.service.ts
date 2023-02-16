@@ -20,25 +20,54 @@ export class AuthService {
                 private readonly sellerService: SellerService) {
     }
     async login(session: ISession,dto: LoginReqDto): Promise<string> {
-        const offerer: Offerer = await this.offererService.getOffererByUsername(dto.username);
-        const seller: Seller = await this.sellerService.getSellerByUsername(dto.username);
-        if (offerer) {
-            if (this.checkPassword(dto, offerer.hashedPassword, 'Offerer', session)) return 'Offerer';
-        }
-        if (seller) {
-            if (this.checkPassword(dto, seller.hashedPassword, 'Seller', session)) return 'Seller';
-        }
+        return new Promise<string>(async (resolve, reject) => {
+            await this.offererService.getOffererByUsername(dto.username).then(async offerer => {
+                console.log(offerer);
+                return this.checkPassword(dto, offerer.hashedPassword, 'Offerer', session);
+            }).then(rightPassword => {
+                console.log('then' +rightPassword);
+                if (rightPassword) {
+                    console.log('schicke offerer zurück');
+                    resolve('Offerer');
+                } else {
+                    console.log('return true geht nicht')
+                }
+            }).catch(async () => {
+                await this.sellerService.getSellerByUsername(dto.username).then(async seller => {
+                    const rightPassword: boolean = await this.checkPassword(dto, seller.hashedPassword, 'Seller', session);
+                    if (rightPassword) {
+                        console.log('schicke seller zurück');
+                        resolve('Seller');
+                    }
+                }).catch(err => {
+                    reject(err);
+                });
+            });
+        })
     }
-
-    checkPassword(dto: LoginReqDto, hashedPassword: string, role: string, session: ISession): boolean {
-        bcrypt.compare(dto.password, hashedPassword, function (err, result) {
-            if (result) {
-                return true;
-            } else {
-                throw new UnauthorizedException();
+/*
+    async login(session: ISession,dto: LoginReqDto): Promise<string> {
+            const offerer: Offerer = await this.offererService.getOffererByUsername(dto.username);
+            const seller: Seller = await this.sellerService.getSellerByUsername(dto.username);
+            if (offerer) {
+                if (this.checkPassword(dto, offerer.hashedPassword, 'Offerer', session)) return 'Offerer';
             }
+            if (seller) {
+                if (this.checkPassword(dto, seller.hashedPassword, 'Seller', session)) return 'Seller';
+            }
+    }*/
+
+    async checkPassword(dto: LoginReqDto, hashedPassword: string, role: string, session: ISession): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            bcrypt.compare(dto.password, hashedPassword, function (err, result) {
+                if (result) {
+                    console.log('passwort korrekt');
+                    resolve(true);
+                } else {
+                    throw new UnauthorizedException();
+                }
+            });
         });
-        return false;
     }
 
     /*OLD FUNCTION
