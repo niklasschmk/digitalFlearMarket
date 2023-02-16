@@ -4,6 +4,7 @@
     <router-link to="/" class="nav-item">Home</router-link>
     <router-link to="/alloffers" class="nav-item">Angebote</router-link>
     <router-link to="/chats" class="nav-item">Chats</router-link>
+    <a v-if="role==='seller'" @click="createNewProductModal=true" class="nav-item">Anlegen</a>
     <router-link v-if="loggedIn===true" to="/profile" class="nav-item">Profil</router-link>
     <a v-if="loggedIn===false" @click="loginModal=true" class="nav-item">Login</a>
   </div>
@@ -38,9 +39,20 @@
           <label for="inputPassword">Passwort</label>
           <input autocomplete="false" type="password" class="form-control" id="inputPassword" placeholder="Passwort" v-model="password">
         </div>
-        <div style="text-align: center">
-          <button class="btn btn-outline-secondary" @click="loginModal=false; registerModal=true ">Noch kein Account?</button>
+        <div class="row">
+          <div class="col-md-6 col-12 mb-3">
+            <div style="text-align: center">
+              <button class="btn btn-outline-secondary" @click="loginModal=false; registerModal=true ">Noch kein Account?</button>
+            </div>
+          </div>
+          <div class="col-md-6 col-12 mb-3">
+            <div style="text-align: center">
+              <button class="btn btn-outline-secondary" @click="loginModal=false; loginModalSeller=true ">Als Verkäufer einloggen</button>
+            </div>
+          </div>
         </div>
+
+
 
       </template>
       <template #footer>
@@ -48,6 +60,73 @@
       </template>
     </modal>
   </Teleport>
+
+  <!--MODAL CREATE NEW PRODUCT-->
+  <Teleport to="body">
+    <!-- use the modal component, pass in the prop -->
+    <modal :show="createNewProductModal" @close="createNewProductModal = false">
+      <template #header>
+        <p>Login</p>
+        <button class="btn btn-secondary" style="text-align: right" @click="createNewProductModal = false;">
+          X
+        </button>
+      </template>
+      <template #body>
+        <div class="form-group mb-3">
+          <label for="inputTitle">Titel</label>
+          <input autocomplete="false" type="text" class="form-control" id="inputTitle" placeholder="Canon EOS 750d" v-model="productTitle">
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="inputPrice">Preis</label>
+          <input autocomplete="false" type="number" class="form-control" id="inputPrice" placeholder="499€" v-model="productPrice">
+        </div>
+
+        <p>Verhandelbar?</p>
+        <div class="custom-control custom-checkbox mb-3">
+          <input type="checkbox" class="custom-control-input" id="customCheck1" v-model="productNegotiable">
+          <label class="custom-control-label" for="customCheck1">Ja</label>
+        </div>
+
+        <div class="form-group">
+          <label for="inputDesc">Beschreibung</label>
+          <textarea class="form-control" id="inputDesc" rows="3" v-model="productDesc"></textarea>
+        </div>
+
+      </template>
+      <template #footer>
+        <button class="btn btn-success" @click="createProduct()">Anlegen</button>
+      </template>
+    </modal>
+  </Teleport>
+
+  <!--MODAL TO LOGIN AS SELLER-->
+  <Teleport to="body">
+    <!-- use the modal component, pass in the prop -->
+    <modal :show="loginModalSeller" @close="loginModalSeller = false">
+      <template #header>
+        <p>Login</p>
+        <button class="btn btn-secondary" style="text-align: right" @click="loginModalSeller = false;">
+          X
+        </button>
+      </template>
+      <template #body>
+        <div class="form-group mb-5">
+          <label for="inputLoginnameSeller">Loginname</label>
+          <input autocomplete="false" type="text" class="form-control" id="inputLoginnameSeller" placeholder="Loginname" v-model="loginname">
+        </div>
+        <div class="form-group mb-5">
+          <label for="inputPasswordSeller">Passwort</label>
+          <input autocomplete="false" type="password" class="form-control" id="inputPasswordSeller" placeholder="Passwort" v-model="password">
+        </div>
+
+      </template>
+      <template #footer>
+        <button class="btn btn-success" @click="loginSeller()">Login</button>
+      </template>
+    </modal>
+  </Teleport>
+
   <!--MODAL TO REGISTER-->
   <Teleport to="body">
     <!-- use the modal component, pass in the prop -->
@@ -59,15 +138,27 @@
         </button>
       </template>
       <template #body>
-        <div class="form-group mb-5">
-          <label for="inputLoginnameReg">Loginname</label>
+        <div class="form-group mb-3">
+          <label for="inputFirstname">Vorname</label>
+          <input autocomplete="false" type="text" class="form-control" id="inputFirstname" placeholder="Vorname" v-model="registerFirstname">
+        </div>
+        <div class="form-group mb-3">
+          <label for="inputLastname">Nachname</label>
+          <input autocomplete="false" type="text" class="form-control" id="inputLastname" placeholder="Nachname" v-model="registerLastname">
+        </div>
+        <div class="form-group mb-3">
+          <label for="inputPhone">Telefon</label>
+          <input autocomplete="false" type="tel" class="form-control" id="inputPhone" placeholder="0123456789" v-model="registerPhone">
+        </div>
+        <div class="form-group mb-3">
+          <label for="inputLoginnameReg">Loginname (Wird für den Login benötigt)</label>
           <input autocomplete="false" type="text" class="form-control" id="inputLoginnameReg" placeholder="Loginname" v-model="registerName">
         </div>
-        <div class="form-group mb-5">
+        <div class="form-group mb-3">
           <label for="inputPasswordReg">Passwort</label>
           <input autocomplete="false" type="password" class="form-control" id="inputPasswordReg" placeholder="Passwort" v-model="registerPass">
         </div>
-        <div class="form-group mb-5">
+        <div class="form-group mb-3">
           <label for="inputPasswordRegRe">Passwort erneut</label>
           <input autocomplete="false" type="password" class="form-control" id="inputPasswordRegRe" placeholder="Passwort" v-model="registerPassRe">
         </div>
@@ -88,36 +179,142 @@ import Modal from "@/components/Modal";
 export default {
   name: 'App',
   components:{Modal},
+  beforeMount() {
+    this.checkLogin()
+  },
   data(){
     return{
       loggedIn: false,
+      role:"",
+
+      //login data
       loginModal: false,
+      loginModalSeller: false,
       loginname:"",
       password:"",
 
+      //register data
       registerModal: false,
+      registerFirstname:"",
+      registerLastname:"",
+      registerPhone:"",
       registerName:"",
       registerPass:"",
       registerPassRe:"",
+
+      //create new product data
+      createNewProductModal: false,
+      productTitle:"",
+      productPrice:"",
+      productNegotiable: false,
+      productDesc:"",
+
+      //user object
+      user:{},
     }
   },
   methods:{
+    createProduct(){
+      this.axios.request({
+        method: 'POST',
+        url: this.apiurl+'product/newProduct',
+        data: {
+          name: this.user.name.toString().trim(),
+          userId: this.user.uId.toString().trim(),
+          price: this.productPrice,
+          negotiable: this.productNegotiable,
+          description: this.productDesc,
+          title: this.productTitle
+
+        },
+      })
+          .then(response => {
+            console.log(response.data)
+            if (response.status===401){
+              alert("Falsche Logindaten")
+            }else{
+              this.loggedIn=true
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    },
+
     login(){
       if (this.loginname.length!==0&&this.password.length!==0){
-        /*
-        Hier Request ans Beckend senden. Wenn Login erfolgreich, dann Variable this.loggedIn = true
-         */
+        this.axios.request({
+          method: 'POST',
+          url: this.apiurl+'auth/login',
+          data: {
+            username: this.loginname.toString().trim(),
+            password: this.password.toString().trim()
+          },
+        })
+            .then(response => {
+              console.log(response.data)
+              if (response.status===401){
+                alert("Falsche Logindaten")
+              }else{
+                this.loggedIn=true
+                this.role="offerer"
+              }
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+      }
+    },
+
+    loginSeller(){
+      if (this.loginname.length!==0&&this.password.length!==0){
+        this.axios.request({
+          method: 'POST',
+          url: this.apiurl+'auth/login',
+          data: {
+            username: this.loginname.toString().trim(),
+            password: this.password.toString().trim()
+          },
+        })
+            .then(response => {
+              console.log(response.data)
+              if (response.status===401){
+                alert("Falsche Logindaten")
+              }else{
+                this.loggedIn=true
+                this.role="seller"
+              }
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
       }
     },
     register(){
-      if (this.registerName.length!==0&&this.registerPass.length!==0&&this.registerPassRe.length!==0){
+      if (this.registerName.length!==0&&this.registerPass.length!==0&&this.registerPassRe.length!==0&&this.registerFirstname.length!==0&&this.registerLastname.length!==0&&this.registerPhone.length!==0){
         if (this.registerPass===this.registerPassRe){
-          /*
-          Hier Request ans Backend senden mit Registerdaten. Wenn success, dann login funktion aufrufen und vorher
-          this.loginname = this.registername
-          this.password = this.registerPass
-          setzen.
-           */
+          this.axios.request({
+            method: 'POST',
+            url: this.apiurl+'register',
+            data: {
+              username: this.registerName.toString().trim(),
+              password: this.registerPass.toString().trim(),
+              firstname: this.registerFirstname.toString().trim(),
+              lastname: this.registerLastname.toString().trim(),
+              phoneNumber: this.registerPhone.toString().trim(),
+            },
+          })
+              .then(response => {
+                console.log(response.data)
+                this.loginname=this.registerName
+                this.password=this.registerPass
+                //calling loginfunction with the inserted username and password from registration
+                this.login()
+
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
         }else {
           alert("Passwort stimmt nicht überein")
         }
@@ -125,11 +322,17 @@ export default {
         alert("Sie müssen alle Felder ausfüllen")
       }
     },
-    isLoggedIn(){
-      /*
-      Hier request ans Backend, gucken ob aktive Session, wenn ja, dann this.loggedIn = true
-       */
-    }
+    checkLogin(){
+      this.axios.get(this.apiurl+'auth/checkLogin').then((response) => {
+        console.log(response.data)
+        if (response.data.statusCode !==400){
+          this.loggedIn=true
+        }
+      })
+          .catch(function (error) {
+            console.log(error);
+          });
+    },
   }
 }
 </script>
@@ -158,7 +361,7 @@ export default {
 /* Style the links inside the navigation bar */
 .nav-item {
   color: #f2f2f2;
-  width: 20vw;
+  width: 10vw;
   transition: all ease-in-out .1s;
   display: inline-block;
   text-align: center;
