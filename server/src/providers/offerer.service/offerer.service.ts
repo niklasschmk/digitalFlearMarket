@@ -1,4 +1,4 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Offerer} from "../../models/offerer";
 import {Repository} from "typeorm";
@@ -12,6 +12,7 @@ import {Product} from "../../models/product";
 import {CreateFavoriteSellerReqDto} from "../../dtos/favoriteSeller/CreateFavoriteSellerReqDto";
 import {UpdateFavoriteProductReqDto} from "../../dtos/favoriteProducts/UpdateFavoriteProductReqDto";
 import {UpdateFavoriteSellerReqDto} from "../../dtos/favoriteSeller/UpdateFavoriteSellerReqDto";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class OffererService {
@@ -36,7 +37,20 @@ export class OffererService {
 
 
     async createNewOfferer(dto: CreateOffererRequestDto): Promise<Offerer> {
-        const offerer: Offerer = new Offerer(dto.username, dto.hashedPassword, dto.firstname, dto.lastname, dto.phoneNumber);
+        const saltRounds: number = 10;
+        const repo: Repository<Offerer> = this.offererRepo;
+        let offerer: Promise<Offerer>;
+        bcrypt.genSalt(saltRounds, function (err, salt) {
+            bcrypt.hash(dto.hashedPassword, salt, function (err, hash) {
+                console.log(hash);
+                offerer = repo.save(new Offerer(dto.username, hash, dto.firstname, dto.lastname, dto.phoneNumber));
+            });
+        });
+        return offerer;
+    }
+
+    async createNewOfferer2(username: string, hashedPassword: string, firstname: string, lastname: string, phoneNumber: string): Promise<Offerer> {
+        const offerer: Offerer = new Offerer(username, hashedPassword, firstname, lastname, phoneNumber);
         return this.offererRepo.save(offerer);
     }
 

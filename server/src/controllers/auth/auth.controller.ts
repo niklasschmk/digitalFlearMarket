@@ -23,7 +23,7 @@ export class AuthController {
                 return this.offererService.getOffererByUsername(session.username);
             }
         } catch (e) {
-            throw new BadRequestException();
+            throw new BadRequestException('Something went wrong', {cause: e, description: 'Error description'});
         }
 
     }
@@ -32,10 +32,16 @@ export class AuthController {
     @ApiResponse({type: LoginReqDto})
     login(@Session() session: ISession, @Body() body: LoginReqDto): LoginResDto {
         try {
-            this.authService.login(session, body).then();
+            this.authService.login(session, body).then(role => {
+                if (role){
+                    session.isLoggedIn = true;
+                    session.role = role;
+                    session.username = body.username;
+                }
+            });
             return new LoginResDto(true);
         } catch (e) {
-            throw new BadRequestException();
+            throw new BadRequestException('Something went wrong', {cause: e, description: 'Error description'});
         }
     }
 /* Old register
@@ -58,19 +64,22 @@ export class AuthController {
         await this.offererService.createNewOfferer(body);*/
         //const offerer: Offerer = this.authService.register(body);
         //body.hashedPassword = offerer.hashedPassword;
-        const saltRounds: number = 10;
-        bcrypt.genSalt(saltRounds, function (err, salt) {
-            bcrypt.hash(body.hashedPassword, salt, function (err, hash) {
-                console.log(hash);
-                body.hashedPassword = hash;
-            });
-        });
-        this.offererService.createNewOfferer(body);
-        return new RegisterResDto(true);
+        try {
+            this.offererService.createNewOfferer(body);
+            return new RegisterResDto(true);
+        } catch (e) {
+            throw new BadRequestException('Something went wrong', {cause: e, description: 'Error description'});
+        }
     }
 
     @Post('logout')
     logout(@Session() session: ISession): void {
-        this.authService.logout(session);
+        try {
+            session.isLoggedIn = false;
+            session.role = 'undefined';
+            session.username = '';
+        } catch (e) {
+            throw new BadRequestException('Something went wrong', {cause: e, description: 'Error description'});
+        }
     }
 }

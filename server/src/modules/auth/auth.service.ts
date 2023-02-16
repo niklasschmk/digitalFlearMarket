@@ -19,23 +19,20 @@ export class AuthService {
                 private readonly offererService: OffererService,
                 private readonly sellerService: SellerService) {
     }
-    async login(session: ISession,dto: LoginReqDto): Promise<boolean> {
+    async login(session: ISession,dto: LoginReqDto): Promise<string> {
         const offerer: Offerer = await this.offererService.getOffererByUsername(dto.username);
         const seller: Seller = await this.sellerService.getSellerByUsername(dto.username);
         if (offerer) {
-            return this.checkPassword(dto, offerer.hashedPassword, 'Offerer', session);
+            if (this.checkPassword(dto, offerer.hashedPassword, 'Offerer', session)) return 'Offerer';
         }
         if (seller) {
-            return this.checkPassword(dto, seller.hashedPassword, 'Seller', session);
+            if (this.checkPassword(dto, seller.hashedPassword, 'Seller', session)) return 'Seller';
         }
     }
 
     checkPassword(dto: LoginReqDto, hashedPassword: string, role: string, session: ISession): boolean {
         bcrypt.compare(dto.password, hashedPassword, function (err, result) {
             if (result) {
-                session.isLoggedIn = true;
-                session.role = role;
-                session.username = dto.username;
                 return true;
             } else {
                 throw new UnauthorizedException();
@@ -83,11 +80,5 @@ export class AuthService {
         });
         console.log(hashedPassword);
         return hashedPassword;
-    }
-
-    logout(session: ISession) {
-        session.isLoggedIn = false;
-        session.role = 'undefined';
-        session.username = '';
     }
 }
