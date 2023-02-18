@@ -3,7 +3,7 @@
   <div class="text-center">
     <div class="d-flex flex-wrap">
       <div class="col-md-6 col-12 d-flex justify-content-center align-items-center erlebe min-height-200 shadow" style="background-color: #fde0e5">
-        <h2 class="erle">Erleben Sie die neue Art des Flohmarktes!</h2>
+        <h1 class="erle">Erleben Sie die neue Art des Flohmarktes!</h1>
       </div>
       <div class="col-md-6 col-12">
         <img alt="bild" src="../assets/images/flohmarkt.jpeg" class="image-preview">
@@ -50,7 +50,11 @@ export default {
   name: "HomeView",
 }
 </script>
-
+h1{
+font-size: 2rem;
+text-shadow: 1px 1px #ccc;
+text-align: center;
+}
 <style scoped>
 .min-height-200 {
   min-height: 200px;

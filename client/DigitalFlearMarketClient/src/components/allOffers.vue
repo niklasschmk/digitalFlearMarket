@@ -42,7 +42,7 @@ export default {
         },
         {
           'id': '2',
-          'title': 'Test2name',
+          'title': 'Test2name ',
           'offerer': ' Hans2 molllllllle ',
           'offererId': '1',
           'price': '6,99',
