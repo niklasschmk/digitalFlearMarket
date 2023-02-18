@@ -4,7 +4,7 @@
     <div class="row mb-3 offer-box">
       <div class="col-md-3 col-12 mb-3">
         <!--IMAGE IS STATIC BECAUSE WE DONT HAVE A FILESYSTEM RIGHT NOW-->
-        <img src="https://as1.ftcdn.net/v2/jpg/04/08/51/90/1000_F_408519023_dxOq9Lel1AID4wP7uAQDLTKdwteiIlum.jpg" class="img-fluid product-image">
+        <img src="https://as1.ftcdn.net/v2/jpg/04/08/51/90/1000_F_408519023_dxOq9Lel1AID4wP7uAQDLTKdwteiIlum.jpg" alt="bild" class="img-fluid product-image">
       </div>
       <div class="col-md-9 col-12 d-flex align-items-center justify-content-center">
         <div class="row">
@@ -20,6 +20,27 @@
       </div>
     </div>
   </div>
+
+  <!--
+  <div class="card mb-3">
+  <div class="row no-gutters">
+    <div class="col-md-3 col-12">
+
+  <img src="https://as1.ftcdn.net/v2/jpg/04/08/51/90/1000_F_408519023_dxOq9Lel1AID4wP7uAQDLTKdwteiIlum.jpg" class="card-img">
+  </div>
+  <div class="col-md-9 col-12">
+    <div class="card-body">
+      <h5 class="card-title">{{offer.title}}</h5>
+      <p class="card-text"><b style="color: #04AA6D;">{{offer.price}}€</b></p>
+      <p class="card-text">Händler: {{offer.name}}</p>
+      <router-link :to="{ name: 'product', query: {id: offer.productId }}" class="btn btn-primary">
+        Details
+      </router-link>
+    </div>
+  </div>
+  </div>
+  </div>
+  -->
 </template>
 
 <script>
