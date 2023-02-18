@@ -55,6 +55,14 @@ function randomId(): Number {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(
+      session({
+        secret: 'dfm-secret',
+        resave: false,
+        saveUninitialized: false,
+      }),
+  );
+
   app.enableCors();
   app.useGlobalPipes(
       new ValidationPipe({ transform: true, enableDebugMessages: true }),
@@ -72,13 +80,7 @@ async function bootstrap() {
     console.log('listening for requests on port 8080');
   });
 
-  app.use(
-      session({
-        secret: 'dfm-secret',
-        resave: false,
-        saveUninitialized: false,
-      }),
-  );
+
   /*
   let sessionStore = new InMemorySessionStore();
   let messageStore = new MessageStore();

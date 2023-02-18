@@ -28,10 +28,11 @@ export class SellerService {
     async createNewSeller(dto: CreateSellerRequestDto): Promise<Seller> {
         const saltRounds: number = 10;
         let savedSeller;
+        const sellerService = this;
         bcrypt.genSalt(saltRounds, function (err, salt) {
-            bcrypt.hash(dto.hashedPassword, salt, function (err, hash) {
+            bcrypt.hash(dto.hashedPassword, salt, async function (err, hash) {
                 const seller: Seller = new Seller(dto.username, hash, dto.firstname, dto.lastname, dto.phoneNumber, dto.standNumber);
-                savedSeller = this.sellersRepository.save(seller);
+                savedSeller = await sellerService.sellersRepository.save(seller);
             });
         });
         return savedSeller;

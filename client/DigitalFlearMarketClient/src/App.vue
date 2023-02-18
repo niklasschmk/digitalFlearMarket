@@ -4,9 +4,10 @@
     <router-link to="/" class="nav-item">Home</router-link>
     <router-link to="/alloffers" class="nav-item">Angebote</router-link>
     <router-link to="/chats" class="nav-item">Chats</router-link>
-    <a v-if="role==='seller'" @click="createNewProductModal=true" class="nav-item">Anlegen</a>
-    <router-link v-if="loggedIn===true" to="/profile" class="nav-item">Profil</router-link>
+    <a v-if="role==='Seller'" @click="createNewProductModal=true" class="nav-item">Anlegen</a>
+    <router-link :to="{ name: 'profile', query: {id: user.userId }}" v-if="role==='Seller'"  class="nav-item">Profil</router-link>
     <a v-if="loggedIn===false" @click="loginModal=true" class="nav-item">Login</a>
+    <a v-if="loggedIn===true" @click="settingsModal=true" class="nav-item">Einstellungen</a>
   </div>
 </div>
 
@@ -43,11 +44,6 @@
           <div class="col-md-6 col-12 mb-3">
             <div style="text-align: center">
               <button class="btn btn-outline-secondary" @click="loginModal=false; registerModal=true ">Noch kein Account?</button>
-            </div>
-          </div>
-          <div class="col-md-6 col-12 mb-3">
-            <div style="text-align: center">
-              <button class="btn btn-outline-secondary" @click="loginModal=false; loginModalSeller=true ">Als Verkäufer einloggen</button>
             </div>
           </div>
         </div>
@@ -100,33 +96,6 @@
     </modal>
   </Teleport>
 
-  <!--MODAL TO LOGIN AS SELLER-->
-  <Teleport to="body">
-    <!-- use the modal component, pass in the prop -->
-    <modal :show="loginModalSeller" @close="loginModalSeller = false">
-      <template #header>
-        <p>Login</p>
-        <button class="btn btn-secondary" style="text-align: right" @click="loginModalSeller = false;">
-          X
-        </button>
-      </template>
-      <template #body>
-        <div class="form-group mb-5">
-          <label for="inputLoginnameSeller">Loginname</label>
-          <input autocomplete="false" type="text" class="form-control" id="inputLoginnameSeller" placeholder="Loginname" v-model="loginname">
-        </div>
-        <div class="form-group mb-5">
-          <label for="inputPasswordSeller">Passwort</label>
-          <input autocomplete="false" type="password" class="form-control" id="inputPasswordSeller" placeholder="Passwort" v-model="password">
-        </div>
-
-      </template>
-      <template #footer>
-        <button class="btn btn-success" @click="loginSeller()">Login</button>
-      </template>
-    </modal>
-  </Teleport>
-
   <!--MODAL TO REGISTER-->
   <Teleport to="body">
     <!-- use the modal component, pass in the prop -->
@@ -166,6 +135,33 @@
       </template>
       <template #footer>
         <button class="btn btn-success" @click="register()">Registrieren</button>
+      </template>
+    </modal>
+  </Teleport>
+
+  <!--MODAL FOR SETTINGS-->
+  <Teleport to="body">
+    <!-- use the modal component, pass in the prop -->
+    <modal :show="settingsModal" @close="settingsModal = false">
+      <template #header>
+        <p>Quick Settings</p>
+        <button class="btn btn-secondary" style="text-align: right" @click="settingsModal = false;">
+          X
+        </button>
+      </template>
+      <template #body>
+        <div class="row text-center">
+          <div class="col-md-6 col-12 mb-5">
+            <button class="btn btn-warning" @click="logout()">Ausloggen</button>
+          </div>
+          <div class="col-md-6 col-12 mb-5">
+            <button class="btn btn-outline-dark" @click="deleteAccount()">Account löschen</button>
+          </div>
+        </div>
+      </template>
+      <template #footer>
+        <!--Empty p tag for filling the prop placeholder-->
+        <p></p>
       </template>
     </modal>
   </Teleport>
@@ -211,6 +207,9 @@ export default {
 
       //user object
       user:{},
+
+      //for settings
+      settingsModal: false,
     }
   },
   methods:{
@@ -219,8 +218,8 @@ export default {
         method: 'POST',
         url: this.apiurl+'product/newProduct',
         data: {
-          name: this.user.name.toString().trim(),
-          userId: this.user.uId.toString().trim(),
+          userId: this.user.userId,
+          name: this.user.firstname,
           price: this.productPrice,
           negotiable: this.productNegotiable,
           description: this.productDesc,
@@ -257,48 +256,68 @@ export default {
                 alert("Falsche Logindaten")
               }else{
                 this.loggedIn=true
-                this.role="offerer"
+                this.checkLogin()
+                this.loginModal=false
               }
             })
             .catch(function (error) {
               console.log(error);
             });
+      }
+    },
+    logout(){
+      this.axios.request({
+        method: 'POST',
+        url: this.apiurl+'auth/logout',
+      })
+          .then(function() {
+           window.location.reload()
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    },
+
+    deleteAccount(){
+      if (confirm('Möchten Sie Ihren Account wirklich löschen?')) {
+        // Yes
+
+        //check role and use route representing his role
+        let route ="";
+        if (this.role==="Offerer"){
+          route = "offerer/delteOfferer"
+        }
+        if (this.role==="Seller"){
+          route = "seller/deleteSeller"
+        }
+
+        this.axios.request({
+          method: 'POST',
+          url: this.apiurl+route+'/'+this.user.userId,
+        })
+            .then(function() {
+              this.logout()
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+
+
+      } else {
+        // No
+        console.log('Nichts hat sich geändert');
       }
     },
 
-    loginSeller(){
-      if (this.loginname.length!==0&&this.password.length!==0){
-        this.axios.request({
-          method: 'POST',
-          url: this.apiurl+'auth/login',
-          data: {
-            username: this.loginname.toString().trim(),
-            password: this.password.toString().trim()
-          },
-        })
-            .then(response => {
-              console.log(response.data)
-              if (response.status===401){
-                alert("Falsche Logindaten")
-              }else{
-                this.loggedIn=true
-                this.role="seller"
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-      }
-    },
     register(){
       if (this.registerName.length!==0&&this.registerPass.length!==0&&this.registerPassRe.length!==0&&this.registerFirstname.length!==0&&this.registerLastname.length!==0&&this.registerPhone.length!==0){
         if (this.registerPass===this.registerPassRe){
           this.axios.request({
             method: 'POST',
-            url: this.apiurl+'register',
+            url: this.apiurl+'auth/register',
             data: {
               username: this.registerName.toString().trim(),
-              password: this.registerPass.toString().trim(),
+              hashedPassword: this.registerPass.toString().trim(),
               firstname: this.registerFirstname.toString().trim(),
               lastname: this.registerLastname.toString().trim(),
               phoneNumber: this.registerPhone.toString().trim(),
@@ -308,6 +327,7 @@ export default {
                 console.log(response.data)
                 this.loginname=this.registerName
                 this.password=this.registerPass
+                this.registerModal=false
                 //calling loginfunction with the inserted username and password from registration
                 this.login()
 
@@ -325,8 +345,10 @@ export default {
     checkLogin(){
       this.axios.get(this.apiurl+'auth/checkLogin').then((response) => {
         console.log(response.data)
-        if (response.data.statusCode !==400){
+        if (response.data.length!==0){
           this.loggedIn=true
+          this.user=response.data.user
+          this.role=response.data.role
         }
       })
           .catch(function (error) {

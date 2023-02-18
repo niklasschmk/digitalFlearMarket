@@ -9,23 +9,32 @@ import {RegisterResDto} from "../../dtos/auth/RegisterResDto";
 import {OffererService} from "../../providers/offerer.service/offerer.service";
 import {Offerer} from "../../models/offerer";
 import * as bcrypt from "bcrypt";
+import {SellerService} from "../../providers/seller.service/seller.service";
+import {Seller} from "../../models/seller";
 
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService, private readonly offererService: OffererService) {
+    constructor(private readonly authService: AuthService, private readonly offererService: OffererService, private readonly sellerService: SellerService) {
     }
-    
+
     @Get('checkLogin')
-    checkLogin(@Session() session: ISession): Promise<Offerer>{
+    async checkLogin(@Session() session: ISession): Promise<{ user: Offerer | Seller, role: string }>{
         try {
             if (session.isLoggedIn){
-                return this.offererService.getOffererByUsername(session.username);
+                if (session.role==='Offerer'){
+                    const user = await this.offererService.getOffererByUsername(session.username);
+                    const role = session.role;
+                    return Promise.resolve({ user, role });
+                }else{
+                    const user = await this.sellerService.getSellerByUsername(session.username);
+                    const role = session.role;
+                    return Promise.resolve({ user, role });
+                }
             }
         } catch (e) {
             throw new BadRequestException('Something went wrong', {cause: e, description: 'Error description'});
         }
-
     }
 
     @Post('login')
@@ -34,10 +43,10 @@ export class AuthController {
         try {
             const role: string = await this.authService.login(session, body);
             console.log(role);
-            console.log(session);
             session.isLoggedIn = true;
             session.role = role;
             session.username = body.username;
+            console.log(session);
             return new LoginResDto(true);
         } catch (e) {
             throw new BadRequestException('Something went wrong', {cause: e, description: 'Error description'});

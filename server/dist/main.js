@@ -37,6 +37,11 @@ function randomId() {
 }
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    app.use(session({
+        secret: 'dfm-secret',
+        resave: false,
+        saveUninitialized: false,
+    }));
     app.enableCors();
     app.useGlobalPipes(new common_1.ValidationPipe({ transform: true, enableDebugMessages: true }));
     const options = new swagger_1.DocumentBuilder()
@@ -49,11 +54,6 @@ async function bootstrap() {
     let server = await app.listen(8080, function () {
         console.log('listening for requests on port 8080');
     });
-    app.use(session({
-        secret: 'dfm-secret',
-        resave: false,
-        saveUninitialized: false,
-    }));
     console.log('');
     console.log('-------------------------------------------------------------');
     console.log('                    ToDo-Backend läuft                       ');
