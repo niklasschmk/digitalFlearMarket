@@ -39,6 +39,7 @@ h1{
   font-size: 2rem;
   text-shadow: 1px 1px #ccc;
   text-align: center;
+  margin-bottom: 30px;
 }
 .product-image{
   max-height: 10rem;

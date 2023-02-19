@@ -1,19 +1,19 @@
 <template>
-<h1>Alle Angebote</h1>
 
+  <h1 class="title">Alle Angebote</h1>
 
   <div v-for="offer in testOffers" :key="offer.id">
     <div class="row mb-3 offer-box">
       <div class="col-md-3 col-12 mb-3">
         <!--IMAGE IS STATIC BECAUSE WE DONT HAVE A FILESYSTEM RIGHT NOW-->
-        <img alt="bild" src="https://as1.ftcdn.net/v2/jpg/04/08/51/90/1000_F_408519023_dxOq9Lel1AID4wP7uAQDLTKdwteiIlum.jpg" class="img-fluid product-image pbild">
+        <img alt="bild" :src="offer.image" class="img-fluid product-image pbild">
+        <div class="offer-title">{{offer.title}}</div>
       </div>
-      <div class="col-md-9 col-12 d-flex align-items-center justify-content-center">
-        <div class="row">
-          <div class="col-auto"><h5 class="haupt">{{offer.title}}</h5></div>
-          <div class="col-auto"><b style="color: #04AA6D;">{{offer.price}}€</b></div>
-          <div class="col-auto haupt">Händler: {{offer.offerer}}</div>
-          <div class="col-auto">
+      <div class="col-md-9 col-12 d-flex align-items-center">
+        <div class="row w-100">
+          <div class="col-6"><b class="haupt" style="font-size: 1.5rem;">{{offer.price}}€</b></div>
+          <div class="col-6 text-right haupt">Händler: {{offer.offerer}}</div>
+          <div class="col-12 text-right">
             <router-link :to="{ name: 'product', query: {id: offer.productId }}" class="btn btn-primary details">
               Details
             </router-link>
@@ -22,6 +22,8 @@
       </div>
     </div>
   </div>
+
+
 </template>
 
 <script>
@@ -86,18 +88,13 @@ h1{
   font-size: 2rem;
   text-shadow: 1px 1px #ccc;
   text-align: center;
+  margin-bottom: 30px;
 }
-.product-image{
-  max-height: 10rem;
-}
-.offer-box{
-  position: relative;
-  background-color: #e8e8e8;
-  border: 1px solid #b2b2b2;
-  border-radius: 1rem;
-  padding: 1rem;
-  margin: 1rem;
-  box-shadow: 5px 5px #5c636a;
+.offer-title {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: left;
 }
 .haupt{
   font-weight: bold;
@@ -111,4 +108,14 @@ h1{
   top: 15px;
   right: 20px;
 }
+.offer-box{
+  position: relative;
+  background-color: #e8e8e8;
+  border: 1px solid #b2b2b2;
+  border-radius: 1rem;
+  padding: 1rem;
+  margin: 1rem;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
 </style>
